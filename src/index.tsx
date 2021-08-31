@@ -6,7 +6,7 @@ import Routes from './Routes';
 import createSagaMiddleware from "redux-saga"
 import { Provider } from 'react-redux';
 import { applyMiddleware, compose, createStore } from 'redux';
-import rootReducer from './Store';
+import rootReducer, { rootSaga } from './Store';
 
 const sagaMiddleware = createSagaMiddleware();
 
@@ -18,6 +18,8 @@ export const store = createStore(
 )
 
 export type RootState = ReturnType<typeof store["getState"]>;
+
+sagaMiddleware.run(rootSaga);
 
 ReactDOM.render(
   <Provider store={store}>
