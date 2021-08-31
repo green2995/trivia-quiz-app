@@ -5,7 +5,6 @@ import api from "./api"
 import { TriviaCategory } from "../../Interfaces/Category";
 
 function* fetchCategories() {
-  console.log("???")
   try {
     const categories: TriviaCategory[] = yield call(api.fetchCategories);
     yield put(triviaSlice.actions.loadCategories_success(categories))

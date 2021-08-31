@@ -1,6 +1,7 @@
 import React from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '..';
+import CategoryList from '../Components/specific/CategoryList';
 import { triviaSlice } from '../Store/trivia/slice';
 
 const Home = () => {
@@ -13,11 +14,7 @@ const Home = () => {
 
   return (
     <main>
-      {categories.data.map((category) => (
-        <div key={category.id}>
-          {category.name}
-        </div>
-      ))}
+      <CategoryList items={categories.data} />
     </main>
   )
 }

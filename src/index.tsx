@@ -7,6 +7,7 @@ import createSagaMiddleware from "redux-saga"
 import { Provider } from 'react-redux';
 import { applyMiddleware, compose, createStore } from 'redux';
 import rootReducer, { rootSaga } from './Store';
+import { Responsive } from './Context';
 
 const sagaMiddleware = createSagaMiddleware();
 
@@ -23,7 +24,9 @@ sagaMiddleware.run(rootSaga);
 
 ReactDOM.render(
   <Provider store={store}>
-    <Routes />
+    <Responsive.Context>
+      <Routes />
+    </Responsive.Context>
   </Provider>
 , document.getElementById('root'));
 
