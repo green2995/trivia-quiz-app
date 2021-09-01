@@ -19,7 +19,8 @@ const TriviaAPI = {
         params: {
           amount,
           category,
-          encode: "url3986"
+          encode: "url3986",
+          type: "multiple"
         }
       }
     )

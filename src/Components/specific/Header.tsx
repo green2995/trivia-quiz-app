@@ -18,7 +18,9 @@ const Header = () => {
 const Container = styled.div`
   background-color: black;
   display: flex;
-  padding: 1rem;
+  height: 4rem;
+  align-items: center;
+  padding-left: 1rem;
 `;
 
 const Title = styled.div`

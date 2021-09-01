@@ -11,6 +11,10 @@ export const initialState = {
     index: 0,
     submitted: [] as string[],
     answers: [] as string[],
+  },
+  time: {
+    start: -1,
+    end: -1,
   }
 }
 
@@ -26,6 +30,10 @@ const reducer = createReducer(initialState, (builder) => {
   builder.addCase(actions.setCurrentQuestion, (state, action) => {
     state.currentQuestion = action.payload;
   });
+
+  builder.addCase(actions.setTime, (state, action) => {
+    state.time = action.payload;
+  })
 })
 
 export default reducer;

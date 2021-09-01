@@ -10,13 +10,16 @@ const EventHandler = (props: EventHandlerProps) => {
   React.useEffect(() => {
     const unsubscribers = [
       sync.currentQuestion.on((next) => {
-        dispatch(TriviaChatReducer.actions.setCurrentQuestion(next))
+        dispatch(TriviaChatReducer.actions.setCurrentQuestion(next));
       }),
       sync.questions.on((next) => {
-        dispatch(TriviaChatReducer.actions.setQuestions(next))
+        dispatch(TriviaChatReducer.actions.setQuestions(next));
       }),
       sync.records.on((next) => {
-        dispatch(TriviaChatReducer.actions.setRecorods(next))
+        dispatch(TriviaChatReducer.actions.setRecorods(next));
+      }),
+      sync.time.on((next) => {
+        dispatch(TriviaChatReducer.actions.setTime(next));
       }),
 
       // LOAD_QUESTIONS
@@ -68,6 +71,7 @@ const EventHandler = (props: EventHandlerProps) => {
       // PLAY_QUIZ
       event.action.addListener("startQuiz", () => {
         if (!sync.questions.value.data) return;
+        sync.time.set({ start: Date.now(), end: -1 });
         sync.records.set((prev) => prev.slice(0, -1));
         event.reaction.emit("retrieveQuestion");
       }),
@@ -82,7 +86,7 @@ const EventHandler = (props: EventHandlerProps) => {
           questions[i].correct_answer,
           ...questions[i].incorrect_answers,
         ]
-        
+
         const shuffled = answerSet.length > 2 ? shuffle(answerSet) : answerSet;
 
         sync.currentQuestion.set((prev) => ({
@@ -97,6 +101,7 @@ const EventHandler = (props: EventHandlerProps) => {
             message: {
               type: "text",
               value: questions[i].question,
+              tag: "important"
             },
           },
           {
@@ -147,13 +152,15 @@ const EventHandler = (props: EventHandlerProps) => {
       }),
 
       event.reaction.addListener("answer_correct", () => {
+        const correct = sync.questions.value.data![sync.currentQuestion.value.index].correct_answer;
         sync.records.set((prev) => [
           ...prev,
           {
             sender: SYSTEM_NICK,
             message: {
               type: "text",
-              value: getRandomReaction("correct")
+              value: `${getRandomReaction("correct")} 정답은 ${correct} 입니다!`,
+              tag: "benefit",
             }
           }
         ])
@@ -162,18 +169,20 @@ const EventHandler = (props: EventHandlerProps) => {
       }),
 
       event.reaction.addListener("answer_incorrect", () => {
+        const correct = sync.questions.value.data![sync.currentQuestion.value.index].correct_answer;
         sync.records.set((prev) => [
           ...prev,
           {
             sender: SYSTEM_NICK,
             message: {
               type: "text",
-              value: getRandomReaction("incorrect")
+              value: `${getRandomReaction("incorrect")} 정답은 ${correct} 입니다!`,
+              tag: "warning",
             }
-          }
+          },
         ]);
 
-        event.reaction.emit("retrieveQuestion");
+        event.action.emit("nextQuestion");
       }),
 
       event.action.addListener("nextQuestion", () => {
@@ -205,6 +214,8 @@ const EventHandler = (props: EventHandlerProps) => {
       }),
 
       event.reaction.addListener("completeQuiz", () => {
+        sync.time.set((prev) => ({ ...prev, end: Date.now() }));
+
         sync.records.set((prev) => [
           ...prev,
           {
@@ -214,6 +225,21 @@ const EventHandler = (props: EventHandlerProps) => {
               value: "모든 문제를 완료했습니다."
             }
           }
+        ])
+
+        sync.records.set((prev) => [
+          ...prev,
+          {
+            sender: SYSTEM_NICK,
+            message: {
+              type: "jsx",
+              value: (
+                <div>
+                </div>
+              )
+            }
+          }
+
         ])
       }),
     ]
@@ -231,10 +257,10 @@ const EventHandler = (props: EventHandlerProps) => {
 const reactions = {
   correct: [
     "딩동댕~",
-    "정답! 맞아요 맞아",
+    "맞아요 맞아",
     "예쓰! 그거 맞아요",
-    "정답! 조금 아시네요?",
-    "네 정답입니다! ㅊㅋㅊㅋ",
+    "조금 아시네요?",
+    "ㅊㅋㅊㅋ",
   ],
   incorrect: [
     "땡! 에휴 이걸 모르다니",

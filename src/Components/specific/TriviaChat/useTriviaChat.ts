@@ -3,7 +3,6 @@ import { useCurrent } from "../../../Hooks/useCurrent";
 import { Trivia } from "../../../Interfaces/Trivia";
 import { CustomEventEmitter } from "../../../Utils/event/CustomEventEmitter";
 import { CustomSubject } from "../../../Utils/event/CustomSubject";
-import { ChatRecordProps } from "../../derivative/Chat/ChatRecord";
 import TriviaChatReducer from "./reducer";
 import { initialState } from "./reducer/reducer";
 
@@ -41,6 +40,10 @@ export function useTriviaChat() {
       index: 0,
       answers: [],
       submitted: []
+    }),
+    time: new CustomSubject<typeof initialState["time"]>({
+      start: -1,
+      end: -1,
     })
   })
 
