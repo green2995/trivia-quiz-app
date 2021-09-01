@@ -1,27 +1,40 @@
 import React from 'react'
 import { TriviaCategory } from '../../Interfaces/Category'
 import styled from "styled-components"
+import { AbsoluteFill, Flex } from '../../Styled/Generic'
+import { Link } from 'react-router-dom'
 
 const CategoryItem = (props: CategoryItemProps) => {
-  // props.id
-
   return (
     <Container>
-      {props.name}
+      <Link to={{
+        pathname: "/trivia",
+        search: `?category=${props.name}`,
+      }} >
+        <Content>
+          {props.name}
+        </Content>
+      </Link>
     </Container>
   )
 }
 
-const Container = styled.div`
-  display: flex;
-  flex: 1;
+const Container = styled(Flex)`
   padding: 1rem;
   border: 1px solid black;
-  overflow: hidden;
   height: 10rem;
   margin: 1rem;
+`;
+
+const Content = styled(AbsoluteFill)`
   justify-content: center;
   align-items: center;
+  background-color: blue;
+  display: flex;
+  color: white;
+  &:hover {
+    font-weight: bold;
+  }
 `;
 
 type CategoryItemProps = TriviaCategory
