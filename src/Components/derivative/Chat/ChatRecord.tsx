@@ -115,7 +115,7 @@ const Message = styled.div<{ mine?: boolean, tag?: TextMessage["tag"] }>`
     font-weight: bold;
     `;
 
-    if (tag === "benefit") return `
+    if (tag === "positive") return `
     background-color: mediumseagreen;
     font-weight: bold;
     `;
@@ -194,7 +194,7 @@ export type ChatMessages = {
 export type TextMessage = {
   type: "text"
   value: string
-  tag?: "warning" | "important" | "benefit"
+  tag?: "warning" | "important" | "positive"
 }
 
 export type SelectMessage = {

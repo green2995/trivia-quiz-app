@@ -9,6 +9,7 @@ export const Row = styled.div`
 `;
 
 export const Col = styled.div<ColProps>`
+
 ${(props) => {
     const sm = props.sm && `
     @media only screen and (min-width: 600px) {

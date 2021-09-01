@@ -100,7 +100,7 @@ const EventHandler = (props: EventHandlerProps) => {
             sender: SYSTEM_NICK,
             message: {
               type: "text",
-              value: questions[i].question,
+              value: `[ ${i + 1}번 문제 ] ${questions[i].question}`,
               tag: "important"
             },
           },
@@ -131,6 +131,10 @@ const EventHandler = (props: EventHandlerProps) => {
 
         sync.records.set((prev) => [
           ...prev.slice(0, -1),
+        ])
+
+        sync.records.set((prev) => [
+          ...prev,
           {
             sender: USER_NICK,
             message: {
@@ -144,11 +148,13 @@ const EventHandler = (props: EventHandlerProps) => {
         const questions = sync.questions.value.data;
         if (!questions) return console.warn("there's no questions loaded");
 
-        if (answer === questions[i].correct_answer) {
-          event.reaction.emit("answer_correct");
-        } else {
-          event.reaction.emit("answer_incorrect");
-        }
+        setTimeout(() => {
+          if (answer === questions[i].correct_answer) {
+            event.reaction.emit("answer_correct");
+          } else {
+            event.reaction.emit("answer_incorrect");
+          }
+        }, 800)
       }),
 
       event.reaction.addListener("answer_correct", () => {
@@ -160,7 +166,7 @@ const EventHandler = (props: EventHandlerProps) => {
             message: {
               type: "text",
               value: `${getRandomReaction("correct")} 정답은 ${correct} 입니다!`,
-              tag: "benefit",
+              tag: "positive",
             }
           }
         ])
