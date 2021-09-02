@@ -10,6 +10,12 @@ padding: 2rem;
 border-radius: 1rem;
 box-shadow: 0 0 0 0.2rem black;
 user-select: none;
+
+@media only screen and (min-width: 600px) {
+  margin: 2rem;
+}
+
+
 `;
 
 export const Title = styled.div`
@@ -82,7 +88,7 @@ font-family: ${Fonts.어그로체B};
 ${({ direction }) => {
   if (direction === "left") return `
   @media only screen and (min-width: 600px) {
-    margin-right: 1rem;
+    margin-right: 0.5rem;
   }
   
   margin-right: 0;
@@ -91,7 +97,7 @@ ${({ direction }) => {
 
   if (direction === "right") return `
   @media only screen and (min-width: 600px) {
-    margin-left: 1rem;
+    margin-left: 0.5rem;
   }
   
   margin: 0;

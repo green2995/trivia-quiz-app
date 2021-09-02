@@ -1,5 +1,5 @@
 import { combineReducers } from "redux";
-import triviaReducer from "./trivia/slice"
+import triviaReducer from "./trivia/reducer"
 import { all } from "redux-saga/effects"
 import { triviaSaga } from "./trivia/saga";
 

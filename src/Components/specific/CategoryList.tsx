@@ -5,13 +5,22 @@ import { Col, Row } from "../../Styled/Grid";
 import CategoryItem from "./CategoryItem";
 
 const CategoryList = (props: CategoryListProps) => {
+  if (!props.items.length) return (
+    <div>로딩중</div>
+  );
+
   return (
     <Row>
-      {props.items.map((item) => (
-        <Col sm={6} md={4} lg={3} key={item.id}>
-          <CategoryItem {...item} key={item.id} />
-        </Col>
-      ))}
+      <Col sm={6} md={4} lg={3}>
+        <CategoryItem id={-1} name={"Random"} />
+      </Col>
+      {props.items.map((item) => {
+        return (
+          <Col sm={6} md={4} lg={3} key={item.id}>
+            <CategoryItem {...item} key={item.id} />
+          </Col>
+        )
+      })}
     </Row>
   )
 }

@@ -1,65 +1,115 @@
 import React from 'react'
 import styled from 'styled-components'
-import { a, config, useTransition } from 'react-spring'
+import { a, config, useTransition, useSpring } from 'react-spring'
 import { getAbsoluteOffset } from '../../Utils/layout/getAbsoluteOffset';
 import ChatRecord, { ChatRecordProps } from './Chat/ChatRecord'
+import ChatInteractive, { ChatInteractiveProps } from './Chat/ChatInteractive';
+import { Flex } from '../../Styled/Generic';
 
 const Chat = (props: ChatProps) => {
   const containerRef = React.useRef<HTMLDivElement>(null);
+  const interactiveContainerRef = React.useRef<HTMLDivElement>(null);
+  const recordContainerRef = React.useRef<HTMLDivElement>(null);
+  const [recordContainerSpring, springApi] = useSpring(() => ({
+    marginBottom: 10,
+    config: config.gentle,
+  }))
+
   const transitions = useTransition(props.records, {
     from: { opacity: 0, x: -100 },
     enter: { opacity: 1, x: 0 },
-    leave: { opacity: 0, x: -100, height: 0 },
     config: config.stiff
   });
+  
+  const transition_interactive = useTransition(props.interactive, {
+    from: { opacity: 0 },
+    enter: { opacity: 1 },
+    config: config.slow
+  })
+  
+  function scrollToBottom() {
+    if (!containerRef.current) return;
+    recordContainerRef.current?.scrollTo({
+      top: recordContainerRef.current.scrollHeight,
+      behavior: "auto",
+    })
+  }
 
   React.useEffect(() => {
-    if (containerRef.current) {
-      // containerRef.current.scrollTo({
-      //   top: containerRef.current.scrollHeight,
-      //   behavior: "smooth",
-      // })
-      const { top } = getAbsoluteOffset(containerRef.current);
-      window.scrollTo({
-        top: top + containerRef.current.clientHeight - window.innerHeight,
-        behavior: "smooth",
+    if (interactiveContainerRef.current) {
+      springApi.start({
+        marginBottom: interactiveContainerRef.current.clientHeight,
+        onChange: scrollToBottom,
+        onStart: scrollToBottom,
       });
     }
-  }, [props.records])
 
+  }, [props.records, props.interactive])
+  
   return (
     <Container ref={containerRef}>
-      {transitions((spring, item, transition, i) => (
-        <a.div style={spring} key={i}>
-          <ChatRecord
-            mine={props.currentUser === item.sender.name}
-            {...item}
-          />
-        </a.div>
-      ))}
+      <RecordContainer ref={recordContainerRef} style={recordContainerSpring}>
+        {transitions((spring, item, transition, i) => (
+          <a.div style={spring} key={i}>
+            <ChatRecord
+              mine={props.currentUser === item.sender.name}
+              {...item}
+            />
+          </a.div>
+        ))}
+      </RecordContainer>
+      
+      <div style={{position: "relative"}}>
+        <InteractiveContainer ref={interactiveContainerRef}>
+          {transition_interactive((spring, item) => (
+            <a.div style={spring}>
+              {item && (<ChatInteractive {...item} />)}
+            </a.div>
+          ))}
+        </InteractiveContainer>
+      </div>
     </Container>
   )
 }
 
-const Container = styled.div`
+const Container = styled(Flex)`
   width: 100%;
-  max-width: 600px;
-  padding-bottom: 1rem;
-  /* height: 80vh;
-  overflow-y: scroll; */
-
-  /* Hide scrollbar for Chrome, Safari and Opera */
-  /* &::-webkit-scrollbar {
-    display: none;
+  height: calc(100vh - 4rem);
+  /* max-width: 600px; */
+  
+  /* @media only screen and (min-width: 600px) {
+    max-height: 600px;
   } */
 
+  justify-content: space-between;
+  box-shadow: 0 0 20px 0 rgba(0,0,0,0.2);
+  background-color: rgba(255,255,255,0.5);
+
+`;
+
+const RecordContainer = styled(a.div)`
+  overflow-y: scroll;
+  overflow-x: hidden;
+
+  /* Hide scrollbar for Chrome, Safari and Opera */
+  &::-webkit-scrollbar {
+    display: none;
+  }
+
   /* Hide scrollbar for IE, Edge and Firefox */
-  /* -ms-overflow-style: none;  IE and Edge */
-  /* scrollbar-width: none;  Firefox */
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+`;
+
+const InteractiveContainer = styled.div`
+  position: absolute;
+  bottom: 0;
+  width: 100%;
 `;
 
 type ChatProps = {
   records: ChatRecordProps[]
+  interactive?: ChatInteractiveProps
   currentUser: string
 }
 

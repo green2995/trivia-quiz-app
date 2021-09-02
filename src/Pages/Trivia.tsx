@@ -1,16 +1,37 @@
 import React from 'react'
-import { useLocation } from "react-router-dom"
+import { useDispatch, useSelector } from 'react-redux';
+import { useLocation } from 'react-router';
 import styled from 'styled-components';
+import { RootState } from '..';
 import TriviaChat from '../Components/specific/TriviaChat';
-import { Flex } from '../Styled/Generic';
+import { categoriesSlice } from '../Store/trivia/categories/slice';
 
 const Trivia = () => {
-  const query = new URLSearchParams(useLocation().search);
-  const category = query.get("category");
+  const dispatch = useDispatch();
+  const location = useLocation();
+  const triviaState = useSelector((state: RootState) => state.trivia);
+  const search = new URLSearchParams(location.search);
+  const category = search.get("category");
+  const matching = (() => {
+    if (!triviaState.categories.data) return undefined;
+    const existing = triviaState.categories.data.find((item) => item.name === category);
+    return existing || {
+      name: "Random",
+      id: undefined,
+    };
+  })();
+
+  React.useEffect(() => {
+    if (!triviaState.categories.data) {
+      dispatch(categoriesSlice.actions.loadCategories());
+    }
+  }, [])
 
   return (
     <Container>
-      <TriviaChat />
+      {matching !== undefined && (
+        <TriviaChat category={matching} />
+      )}
     </Container>
   )
 }

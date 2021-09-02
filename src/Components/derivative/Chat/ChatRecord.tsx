@@ -1,10 +1,7 @@
 import React from 'react'
 import styled from 'styled-components';
-import { Fonts } from '../../../Constants';
 import { Flex } from '../../../Styled/Generic';
-import { initialState } from '../../specific/TriviaChat/reducer/reducer';
 import TriviaResult, { TriviaResultProps } from '../../specific/TriviaChat/TriviaResult';
-import SelectMessage, { SelectMessageProps } from './SelectMessage';
 
 const ChatRecord = (props: ChatRecordProps) => {
   const { sender, message, mine } = props;
@@ -16,22 +13,6 @@ const ChatRecord = (props: ChatRecordProps) => {
       </MessageContainer>
     )
   }
-
-  if (message.type === "selection")
-    return (
-      <MessageContainer>
-        <SelectMessage {...message.value} />
-      </MessageContainer>
-    )
-
-  if (message.type === "button")
-    return (
-      <MessageContainer>
-        <MessageButton onClick={message.onClick}>
-          {message.value}
-        </MessageButton>
-      </MessageContainer>
-    )
 
   if (mine)
     return (
@@ -115,31 +96,6 @@ const Message = styled.div<{ mine?: boolean, tag?: TextMessage["tag"] }>`
   }}
 `;
 
-const MessageButton = styled.button`
-  flex: 1;
-  outline: none;
-  border: none;
-  padding: 1rem;
-  background-color: blue;
-  color: white;
-  border-radius: 0.5rem;
-  cursor: pointer;
-  font-size: 1rem;
-  font-family: ${Fonts.어그로체B};
-  transition: background-color 100ms;
-
-  &:hover {
-    background-color: navy;
-    color: white;
-  }
-
-  &:active {
-    transition: none;
-    background-color: blueviolet;
-  }
-`;
-
-
 export type ChatRecordProps = {
   sender: {
     name: string
@@ -151,25 +107,12 @@ export type ChatRecordProps = {
 
 export type ChatMessages = {
   text: TextMessage,
-  select: SelectMessage,
-  button: ButtonMessage,
-} & SpecialMessages;
+} & SpecialMessages;;
 
 export type TextMessage = {
   type: "text"
   value: string
   tag?: "warning" | "important" | "positive"
-}
-
-export type SelectMessage = {
-  type: "selection"
-  value: SelectMessageProps
-}
-
-export type ButtonMessage = {
-  type: "button"
-  value: string
-  onClick: () => void
 }
 
 export type SpecialMessages = {

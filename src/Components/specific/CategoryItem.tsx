@@ -3,14 +3,16 @@ import { TriviaCategory } from '../../Interfaces/Category'
 import styled from "styled-components"
 import { AbsoluteFill, Flex } from '../../Styled/Generic'
 import { Link } from 'react-router-dom'
+import { useDispatch } from 'react-redux'
 
 const CategoryItem = (props: CategoryItemProps) => {
   return (
     <Container>
-      <Link to={{
-        pathname: "/trivia",
-        search: `?category=${props.name}`,
-      }} >
+      <Link
+        to={{
+          pathname: "/trivia",
+          search: `?category=${props.name}`,
+        }} >
         <Content>
           {props.name}
         </Content>
@@ -32,6 +34,7 @@ const Content = styled(AbsoluteFill)`
   background-color: blue;
   display: flex;
   color: white;
+  text-align: center;
   &:hover {
     font-weight: bold;
   }

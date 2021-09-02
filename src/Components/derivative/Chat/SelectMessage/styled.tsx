@@ -26,12 +26,15 @@ font-size: 1rem;
 transition-property: background-color, color, font-size;
 transition-duration: 100ms;
 /* height: 3rem; */
+background-color: blue;
+&:hover { background-color: navy; }
+&:active { background-color: blueviolet; }
 
 &:active {
   transition: none;
 }
 
-${({ shouldCareCorrect, shouldCareChosen, chosen, correct }) => {
+/* ${({ shouldCareCorrect, shouldCareChosen, chosen, correct }) => {
   // not yet selected any
   if (!shouldCareChosen && !chosen) return `
   background-color: blue;
@@ -88,5 +91,5 @@ ${({ shouldCareCorrect, shouldCareChosen, chosen, correct }) => {
     box-shadow: ${boxShadow};
     `;
   }
-}}
+}} */
 `;

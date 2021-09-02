@@ -1,6 +1,6 @@
 import React from "react";
 import { useCurrent } from "../../../Hooks/useCurrent";
-import { Trivia } from "../../../Interfaces/Trivia";
+import { Trivia } from "../../../Interfaces/TriviaQuestion";
 import { CustomEventEmitter } from "../../../Utils/event/CustomEventEmitter";
 import { CustomSubject } from "../../../Utils/event/CustomSubject";
 import TriviaChatReducer from "./reducer";
@@ -11,7 +11,7 @@ export const SYSTEM_NICK = "스템이";
 
 export function useTriviaChat() {
   const actionEvent = useCurrent(new CustomEventEmitter<{
-    loadQuestions: (category?: string) => void
+    loadQuestions: () => void
     startQuiz: () => void
     submitAnswer: (questionIndex: number, answer: string) => void
     nextQuestion: () => void
@@ -47,8 +47,8 @@ export function useTriviaChat() {
       submitted: []
     }),
     timetook: new CustomSubject<TriviaChatInitialState["timetook"]>(-1),
+    interactive: new CustomSubject<TriviaChatInitialState["interactive"]>(undefined),
 
-    //temporary state
     time: {
       start: -1,
       end: -1,
@@ -62,7 +62,12 @@ export function useTriviaChat() {
       trial: 0,
       success: 0,
       fail: 0,
-    }
+    },
+
+    category: {
+      id: -1,
+      name: "",
+    }    
   })
 
   const events = { action: actionEvent, reaction: reactionEvent };

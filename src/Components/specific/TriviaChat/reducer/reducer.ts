@@ -1,11 +1,14 @@
 import { createReducer } from "@reduxjs/toolkit";
-import { Trivia } from "../../../../Interfaces/Trivia";
+import { Trivia } from "../../../../Interfaces/TriviaQuestion";
 import AsyncData from "../../../../Utils/redux/AsyncData";
+import { ChatInteractiveProps } from "../../../derivative/Chat/ChatInteractive";
 import { ChatRecordProps } from "../../../derivative/Chat/ChatRecord";
 import * as actions from "./actions";
 
 export const initialState = {
   records: [] as ChatRecordProps[],
+  interactive: undefined as undefined | ChatInteractiveProps,
+  
   questions: AsyncData.getInitialState<Trivia[]>(),
   currentQuestion: {
     index: 0,
@@ -37,6 +40,10 @@ const reducer = createReducer(initialState, (builder) => {
 
   builder.addCase(actions.setTimetook, (state, action) => {
     state.timetook = action.payload;
+  });
+
+  builder.addCase(actions.setInteractive, (state, action) => {
+    state.interactive = action.payload;
   })
 })
 

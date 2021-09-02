@@ -1,5 +1,5 @@
 import { FetchTriviaCategoryResponse, TriviaCategory } from "../Interfaces/Category";
-import { FetchTriviaResponse, Trivia } from "../Interfaces/Trivia";
+import { FetchTriviaResponse, Trivia } from "../Interfaces/TriviaQuestion";
 import axios from "axios";
 
 const TriviaAPI = {
@@ -12,7 +12,7 @@ const TriviaAPI = {
     return res.data.trivia_categories;
   },
 
-  async fetchQuestions(amount: number, category?: string): Promise<Trivia[]> {
+  async fetchQuestions(amount: number, category?: number): Promise<Trivia[]> {
     const res = await axios.get<FetchTriviaResponse>(
       "https://opentdb.com/api.php",
       {
