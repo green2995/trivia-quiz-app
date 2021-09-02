@@ -12,11 +12,15 @@ export const initialState = {
     submitted: [] as string[],
     answers: [] as string[],
   },
-  time: {
-    start: -1,
-    end: -1,
+  timetook: -1,
+  score: {
+    trial: -1,
+    success: -1,
+    fail: -1,
   }
 }
+
+export type TriviaChatInitialState = typeof initialState;
 
 const reducer = createReducer(initialState, (builder) => {
   builder.addCase(actions.setRecorods, (state, action) => {
@@ -31,8 +35,8 @@ const reducer = createReducer(initialState, (builder) => {
     state.currentQuestion = action.payload;
   });
 
-  builder.addCase(actions.setTime, (state, action) => {
-    state.time = action.payload;
+  builder.addCase(actions.setTimetook, (state, action) => {
+    state.timetook = action.payload;
   })
 })
 

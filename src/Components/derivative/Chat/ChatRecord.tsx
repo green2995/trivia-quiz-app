@@ -2,32 +2,25 @@ import React from 'react'
 import styled from 'styled-components';
 import { Fonts } from '../../../Constants';
 import { Flex } from '../../../Styled/Generic';
+import { initialState } from '../../specific/TriviaChat/reducer/reducer';
+import TriviaResult, { TriviaResultProps } from '../../specific/TriviaChat/TriviaResult';
+import SelectMessage, { SelectMessageProps } from './SelectMessage';
 
 const ChatRecord = (props: ChatRecordProps) => {
   const { sender, message, mine } = props;
 
-  if (message.type === "jsx")
+  if (message.type === "triviaResult") {
     return (
       <MessageContainer>
-        {message.value}
+        <TriviaResult {...message.value} />
       </MessageContainer>
     )
+  }
 
   if (message.type === "selection")
     return (
       <MessageContainer>
-        <SelectButtonContainer>
-          {message.value.map((item, i) => {
-            return (
-              <SelectButton
-                onClick={() => message.onSelect(item)}
-                key={i}
-              >
-                {item}
-              </SelectButton>
-            )
-          })}
-        </SelectButtonContainer>
+        <SelectMessage {...message.value} />
       </MessageContainer>
     )
 
@@ -53,9 +46,9 @@ const ChatRecord = (props: ChatRecordProps) => {
 
   return (
     <MessageContainer lean={"left"}>
-      <ProfileImg />
+      <ProfileImg src={sender.imgUrl} />
       <Flex>
-        <ProfileName>{sender}</ProfileName>
+        <ProfileName>{sender.name}</ProfileName>
         <Message tag={message.tag}>
           {message.value}
         </Message>
@@ -92,7 +85,7 @@ const ProfileImg = styled.img`
   min-height: 2.5rem;
   width: 2.5rem;
   height: 2.5rem;
-  border-radius: 1rem;
+  border-radius: 2.5rem;
   margin-right: 0.5rem;
   background-color: lightgrey;
 `;
@@ -146,40 +139,12 @@ const MessageButton = styled.button`
   }
 `;
 
-const SelectButtonContainer = styled(Flex)`
-  flex: 1;
-  border-radius: 1rem;
-  overflow: hidden;
-`;
-
-const SelectButton = styled.button`
-  outline: none;
-  border: none;
-  padding: 1rem;
-  min-width: 50%;
-  box-shadow: inset 0 0 0 0.5px white;
-  background-color: blue;
-  color: white;
-  cursor: pointer;
-  font-family: ${Fonts.어그로체B};
-  font-size: 1rem;
-  transition: background-color 100ms;
-
-  &:hover {
-    background-color: navy;
-    font-weight: bold;
-    color: white;
-  }
-  
-  &:active {
-    transition: none;
-    background-color: blueviolet;
-  }
-`;
-
 
 export type ChatRecordProps = {
-  sender: string
+  sender: {
+    name: string
+    imgUrl?: string
+  }
   message: ChatMessages[keyof ChatMessages]
   mine?: boolean
 }
@@ -188,8 +153,7 @@ export type ChatMessages = {
   text: TextMessage,
   select: SelectMessage,
   button: ButtonMessage,
-  jsx: JSXMessage,
-}
+} & SpecialMessages;
 
 export type TextMessage = {
   type: "text"
@@ -199,8 +163,7 @@ export type TextMessage = {
 
 export type SelectMessage = {
   type: "selection"
-  value: string[]
-  onSelect: (selected: string) => void
+  value: SelectMessageProps
 }
 
 export type ButtonMessage = {
@@ -209,9 +172,11 @@ export type ButtonMessage = {
   onClick: () => void
 }
 
-export type JSXMessage = {
-  type: "jsx",
-  value: JSX.Element,
+export type SpecialMessages = {
+  triviaResult: {
+    type: "triviaResult",
+    value: TriviaResultProps
+  }
 }
 
 export default ChatRecord

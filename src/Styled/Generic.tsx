@@ -8,8 +8,8 @@ export const AbsoluteFill = styled.div`
   bottom: 0;
 `;
 
-export const Flex = styled.div`
+export const Flex = styled.div<{horizontal?: boolean}>`
   position: relative;
   display: flex;
-  flex-direction: column;
+  flex-direction: ${({horizontal}) => horizontal ? "row" : "column"};
 `;

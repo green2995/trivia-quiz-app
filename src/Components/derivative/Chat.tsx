@@ -15,6 +15,10 @@ const Chat = (props: ChatProps) => {
 
   React.useEffect(() => {
     if (containerRef.current) {
+      // containerRef.current.scrollTo({
+      //   top: containerRef.current.scrollHeight,
+      //   behavior: "smooth",
+      // })
       const { top } = getAbsoluteOffset(containerRef.current);
       window.scrollTo({
         top: top + containerRef.current.clientHeight - window.innerHeight,
@@ -28,7 +32,7 @@ const Chat = (props: ChatProps) => {
       {transitions((spring, item, transition, i) => (
         <a.div style={spring} key={i}>
           <ChatRecord
-            mine={props.currentUser === item.sender}
+            mine={props.currentUser === item.sender.name}
             {...item}
           />
         </a.div>
@@ -38,7 +42,20 @@ const Chat = (props: ChatProps) => {
 }
 
 const Container = styled.div`
+  width: 100%;
   max-width: 600px;
+  padding-bottom: 1rem;
+  /* height: 80vh;
+  overflow-y: scroll; */
+
+  /* Hide scrollbar for Chrome, Safari and Opera */
+  /* &::-webkit-scrollbar {
+    display: none;
+  } */
+
+  /* Hide scrollbar for IE, Edge and Firefox */
+  /* -ms-overflow-style: none;  IE and Edge */
+  /* scrollbar-width: none;  Firefox */
 `;
 
 type ChatProps = {

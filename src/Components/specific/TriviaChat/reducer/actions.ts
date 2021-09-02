@@ -1,7 +1,8 @@
 import { createAction } from "@reduxjs/toolkit";
-import { initialState } from "./reducer";
+import { initialState, TriviaChatInitialState } from "./reducer";
 
-export const setRecorods = createAction<typeof initialState["records"]>("setrecords");
-export const setQuestions = createAction<typeof initialState["questions"]>("setquestions");
-export const setCurrentQuestion = createAction<typeof initialState["currentQuestion"]>("setcurrentquestion");
-export const setTime = createAction<typeof initialState["time"]>("settime");
+export const setRecorods = createAction<TriviaChatInitialState["records"]>("setrecords");
+export const setQuestions = createAction<TriviaChatInitialState["questions"]>("setquestions");
+export const setCurrentQuestion = createAction<TriviaChatInitialState["currentQuestion"]>("setcurrentquestion");
+export const setTimetook = createAction<TriviaChatInitialState["timetook"]>("settimetook");
+export const setScore = createAction<TriviaChatInitialState["score"]>("setscore")

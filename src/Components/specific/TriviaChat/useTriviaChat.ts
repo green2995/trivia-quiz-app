@@ -4,7 +4,7 @@ import { Trivia } from "../../../Interfaces/Trivia";
 import { CustomEventEmitter } from "../../../Utils/event/CustomEventEmitter";
 import { CustomSubject } from "../../../Utils/event/CustomSubject";
 import TriviaChatReducer from "./reducer";
-import { initialState } from "./reducer/reducer";
+import { initialState, TriviaChatInitialState } from "./reducer/reducer";
 
 export const USER_NICK = "user";
 export const SYSTEM_NICK = "스템이";
@@ -15,6 +15,11 @@ export function useTriviaChat() {
     startQuiz: () => void
     submitAnswer: (questionIndex: number, answer: string) => void
     nextQuestion: () => void
+    retry: () => void
+    quit: () => void
+    nextSet: () => void
+    resetPlay: () => void
+    initialize: () => void
   }>());
   
   const reactionEvent = useCurrent(new CustomEventEmitter<{
@@ -30,21 +35,34 @@ export function useTriviaChat() {
   }>());
 
   const sync = useCurrent({
-    records: new CustomSubject<typeof initialState["records"]>([]),
-    questions: new CustomSubject<typeof initialState["questions"]>({
-      data: [],
+    records: new CustomSubject<TriviaChatInitialState["records"]>([]),
+    questions: new CustomSubject<TriviaChatInitialState["questions"]>({
+      data: null,
       error: false,
       loading: false,
     }),
-    currentQuestion: new CustomSubject<typeof initialState["currentQuestion"]>({
+    currentQuestion: new CustomSubject<TriviaChatInitialState["currentQuestion"]>({
       index: 0,
       answers: [],
       submitted: []
     }),
-    time: new CustomSubject<typeof initialState["time"]>({
+    timetook: new CustomSubject<TriviaChatInitialState["timetook"]>(-1),
+
+    //temporary state
+    time: {
       start: -1,
       end: -1,
-    })
+    },
+
+    // after submitting answer
+    waitingResponse: false,
+
+    // record it, and when game completed, export it to reducer
+    score: {
+      trial: 0,
+      success: 0,
+      fail: 0,
+    }
   })
 
   const events = { action: actionEvent, reaction: reactionEvent };

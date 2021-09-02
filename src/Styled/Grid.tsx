@@ -15,14 +15,17 @@ ${(props) => {
     @media only screen and (min-width: 600px) {
       width: ${(props.sm / 12) * 100}%
     }`;
+
     const md = props.md && `
     @media only screen and (min-width: 768px) {
       width: ${(props.md / 12) * 100}%      
     }`;
+
     const lg = props.lg && `
     @media only screen and (min-width: 1024px) {
       width: ${(props.lg / 12) * 100}%      
     }`;
+
     const base = `
     width: 100%;
     float: left;

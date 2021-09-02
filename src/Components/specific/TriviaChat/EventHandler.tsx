@@ -1,13 +1,26 @@
 import React from 'react'
+import { useHistory } from 'react-router';
 import TriviaAPI from '../../../Api/TriviaAPI';
 import { shuffle } from '../../../Utils/array/shuffle';
 import TriviaChatReducer from './reducer';
 import { SYSTEM_NICK, USER_NICK, useTriviaChat } from './useTriviaChat';
 
+const SENDER_SYSTEM = {
+  name: SYSTEM_NICK,
+  imgUrl: "https://bit.ly/2V9JUKX"
+}
+
+const SENDER_USER = {
+  name: USER_NICK,
+}
+
 const EventHandler = (props: EventHandlerProps) => {
+  const history = useHistory();
   const { event, dispatch, sync } = props;
 
   React.useEffect(() => {
+    console.log(sync.questions.value)
+
     const unsubscribers = [
       sync.currentQuestion.on((next) => {
         dispatch(TriviaChatReducer.actions.setCurrentQuestion(next));
@@ -18,17 +31,30 @@ const EventHandler = (props: EventHandlerProps) => {
       sync.records.on((next) => {
         dispatch(TriviaChatReducer.actions.setRecorods(next));
       }),
-      sync.time.on((next) => {
-        dispatch(TriviaChatReducer.actions.setTime(next));
+      sync.timetook.on((next) => {
+        dispatch(TriviaChatReducer.actions.setTimetook(next));
       }),
 
       // LOAD_QUESTIONS
       event.action.addListener("loadQuestions", async (category) => {
-        sync.questions.set((prev) => ({
-          ...prev,
+        if (sync.questions.value.data) return;
+
+        sync.questions.set({
+          data: [],
           error: false,
           loading: true,
-        }));
+        });
+
+        sync.records.set((prev) => [
+          ...prev,
+          {
+            message: {
+              type: "text",
+              value: "문제를 불러오고 있습니다"
+            },
+            sender: SENDER_SYSTEM
+          }
+        ])
 
         try {
           const questions = await TriviaAPI.fetchQuestions(10, category);
@@ -44,11 +70,18 @@ const EventHandler = (props: EventHandlerProps) => {
           error: false,
           loading: false,
         });
-
+        
         sync.records.set((prev) => [
           ...prev,
           {
-            sender: SYSTEM_NICK,
+            sender: SENDER_SYSTEM,
+            message: {
+              type: "text",
+              value: "유후~ 문제를 모두 불러왔습니다."
+            },
+          },
+          {
+            sender: SENDER_SYSTEM,
             message: {
               type: "button",
               value: "퀴즈 시작",
@@ -71,9 +104,21 @@ const EventHandler = (props: EventHandlerProps) => {
       // PLAY_QUIZ
       event.action.addListener("startQuiz", () => {
         if (!sync.questions.value.data) return;
-        sync.time.set({ start: Date.now(), end: -1 });
-        sync.records.set((prev) => prev.slice(0, -1));
-        event.reaction.emit("retrieveQuestion");
+        sync.time.start = Date.now()
+        sync.records.set((prev) => [
+          ...prev.slice(0, -1),
+          {
+            sender: SENDER_USER,
+            message: {
+              type: "text",
+              value: "크큭 다 맞춰버리갓어"
+            }
+          }
+        ]);
+
+        setTimeout(() => {
+          event.reaction.emit("retrieveQuestion");          
+        }, 800);
       }),
 
       event.reaction.addListener("retrieveQuestion", () => {
@@ -97,7 +142,7 @@ const EventHandler = (props: EventHandlerProps) => {
         sync.records.set((prev) => [
           ...prev,
           {
-            sender: SYSTEM_NICK,
+            sender: SENDER_SYSTEM,
             message: {
               type: "text",
               value: `[ ${i + 1}번 문제 ] ${questions[i].question}`,
@@ -105,12 +150,15 @@ const EventHandler = (props: EventHandlerProps) => {
             },
           },
           {
-            sender: SYSTEM_NICK,
+            sender: SENDER_SYSTEM,
             message: {
               type: "selection",
-              value: sync.currentQuestion.value.answers,
-              onSelect: (selected) => {
-                event.action.emit("submitAnswer", i, selected);
+              value: {
+                choices: sync.currentQuestion.value.answers,
+                onSelect: (selected) => {
+                  event.action.emit("submitAnswer", i, selected);
+                },
+                correct: questions[i].correct_answer
               }
             }
           }
@@ -119,24 +167,28 @@ const EventHandler = (props: EventHandlerProps) => {
 
       event.action.addListener("submitAnswer", (questionIndex, answer) => {
         const i = sync.currentQuestion.value.index;
-
         // If submitted answer is from completed question, do nothing.
         if (questionIndex !== i) return;
+        // for blocking selection to be changed
+        if (sync.waitingResponse) return;
+        // If has submitted exact answer, do nothing. (multi trial mode)
         if (sync.currentQuestion.value.submitted.indexOf(answer) !== -1) return;
+
+        sync.waitingResponse = true;
 
         sync.currentQuestion.set((prev) => ({
           ...prev,
           submitted: [...prev.submitted, answer]
         }))
 
-        sync.records.set((prev) => [
-          ...prev.slice(0, -1),
-        ])
+        // sync.records.set((prev) => [
+        //   ...prev.slice(0, -1),
+        // ])
 
         sync.records.set((prev) => [
           ...prev,
           {
-            sender: USER_NICK,
+            sender: SENDER_USER,
             message: {
               type: "text",
               value: answer
@@ -144,6 +196,7 @@ const EventHandler = (props: EventHandlerProps) => {
           }
         ])
 
+        sync.score.trial += 1;
 
         const questions = sync.questions.value.data;
         if (!questions) return console.warn("there's no questions loaded");
@@ -154,6 +207,8 @@ const EventHandler = (props: EventHandlerProps) => {
           } else {
             event.reaction.emit("answer_incorrect");
           }
+
+          sync.waitingResponse = false;
         }, 800)
       }),
 
@@ -162,7 +217,7 @@ const EventHandler = (props: EventHandlerProps) => {
         sync.records.set((prev) => [
           ...prev,
           {
-            sender: SYSTEM_NICK,
+            sender: SENDER_SYSTEM,
             message: {
               type: "text",
               value: `${getRandomReaction("correct")} 정답은 ${correct} 입니다!`,
@@ -170,6 +225,8 @@ const EventHandler = (props: EventHandlerProps) => {
             }
           }
         ])
+
+        sync.score.success += 1;
 
         event.action.emit("nextQuestion");
       }),
@@ -179,16 +236,22 @@ const EventHandler = (props: EventHandlerProps) => {
         sync.records.set((prev) => [
           ...prev,
           {
-            sender: SYSTEM_NICK,
+            sender: SENDER_SYSTEM,
             message: {
               type: "text",
-              value: `${getRandomReaction("incorrect")} 정답은 ${correct} 입니다!`,
+              value: `${getRandomReaction("incorrect")} 정답은 ${correct} 입니다`,
               tag: "warning",
             }
           },
         ]);
 
+        sync.score.fail += 1;
+
+        // single trial mode
         event.action.emit("nextQuestion");
+
+        // multi trial mode
+        // event.reaction.emit("retrieveQuestion");
       }),
 
       event.action.addListener("nextQuestion", () => {
@@ -203,7 +266,7 @@ const EventHandler = (props: EventHandlerProps) => {
           sync.records.set((prev) => [
             ...prev,
             {
-              sender: USER_NICK,
+              sender: SENDER_USER,
               message: {
                 type: "button",
                 onClick: () => {
@@ -220,12 +283,14 @@ const EventHandler = (props: EventHandlerProps) => {
       }),
 
       event.reaction.addListener("completeQuiz", () => {
-        sync.time.set((prev) => ({ ...prev, end: Date.now() }));
+        sync.time.end = Date.now();
+        sync.timetook.set(sync.time.end - sync.time.start);
+        dispatch(TriviaChatReducer.actions.setScore(sync.score))
 
         sync.records.set((prev) => [
           ...prev,
           {
-            sender: SYSTEM_NICK,
+            sender: SENDER_SYSTEM,
             message: {
               type: "text",
               value: "모든 문제를 완료했습니다."
@@ -236,18 +301,102 @@ const EventHandler = (props: EventHandlerProps) => {
         sync.records.set((prev) => [
           ...prev,
           {
-            sender: SYSTEM_NICK,
+            sender: SENDER_SYSTEM,
             message: {
-              type: "jsx",
-              value: (
-                <div>
-                </div>
-              )
+              type: "triviaResult",
+              value: {
+                score: sync.score,
+                timetook: sync.timetook.value,
+                onPressRetry: () => {
+                  event.action.emit("retry");
+                },
+                onPressQuit: () => {
+                  event.action.emit("quit");
+                },
+                onPressNext: () => {
+                  event.action.emit("nextSet");
+                }
+              }
             }
           }
-
         ])
       }),
+
+      event.action.addListener("retry", () => {
+        const prevScore = sync.score.success / sync.score.trial;
+
+        event.action.emit("resetPlay");
+
+        sync.records.set([
+          {
+            sender: SENDER_SYSTEM,
+            message: {
+              type: "text",
+              value: prevScore < 1
+                ? "유후~ 이번엔 다 맞출 수 있겠죠?"
+                : "오우 다 맞췄는데 또 하다니, 대단쓰",
+            }
+          },
+          {
+            sender: SENDER_SYSTEM,
+            message: {
+              type: "button",
+              value: "퀴즈 시작",
+              onClick: () => {
+                event.action.emit("startQuiz");
+              },
+            }
+          }
+        ]);
+      }),
+
+      event.action.addListener("quit", () => {
+        history.push("/home");
+      }),
+
+      event.action.addListener("nextSet", () => {
+        event.action.emit("initialize");
+        sync.records.set((prev) => [
+          ...prev,
+          {
+            sender: SENDER_SYSTEM,
+            message: {
+              type: "text",
+              value: "오~ 학구열이 대단하군요?! 좋아요 좋습니다",
+            }
+          }
+        ])
+        event.action.emit("loadQuestions");
+      }),
+
+      event.action.addListener("resetPlay", () => {
+        sync.time.start = 0;
+        sync.time.end = 0;
+        sync.timetook.set(-1);
+
+        sync.score = {
+          fail: 0,
+          success: 0,
+          trial: 0,
+        };
+
+        sync.currentQuestion.set({
+          index: 0,
+          answers: [],
+          submitted: [],
+        });
+      }),
+
+      event.action.addListener("initialize", () => {
+        event.action.emit("resetPlay");
+        sync.questions.set({
+          data: null,
+          error: false,
+          loading: false,
+        });
+        sync.records.set([]);
+      }),
+
     ]
 
     return () => {
