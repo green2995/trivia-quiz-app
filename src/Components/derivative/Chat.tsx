@@ -11,7 +11,7 @@ const Chat = (props: ChatProps) => {
   const interactiveContainerRef = React.useRef<HTMLDivElement>(null);
   const recordContainerRef = React.useRef<HTMLDivElement>(null);
   const [recordContainerSpring, springApi] = useSpring(() => ({
-    marginBottom: 10,
+    paddingBottom: 10,
     config: config.gentle,
   }))
 
@@ -27,23 +27,24 @@ const Chat = (props: ChatProps) => {
     config: config.slow
   })
   
-  function scrollToBottom() {
+  function scrollToBottom(behavior: "auto" | "smooth" = "auto") {
     if (!containerRef.current) return;
     recordContainerRef.current?.scrollTo({
       top: recordContainerRef.current.scrollHeight,
-      behavior: "auto",
+      behavior,
     })
   }
 
   React.useEffect(() => {
     if (interactiveContainerRef.current) {
       springApi.start({
-        marginBottom: interactiveContainerRef.current.clientHeight,
-        onChange: scrollToBottom,
-        onStart: scrollToBottom,
+        paddingBottom: interactiveContainerRef.current.clientHeight,
+        onChange: () => scrollToBottom(),
+        onStart: () => scrollToBottom(),
       });
     }
 
+    scrollToBottom("smooth");
   }, [props.records, props.interactive])
   
   return (
@@ -105,6 +106,10 @@ const InteractiveContainer = styled.div`
   position: absolute;
   bottom: 0;
   width: 100%;
+  min-height: 14rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
 `;
 
 type ChatProps = {
