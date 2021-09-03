@@ -15,12 +15,15 @@ export const initialState = {
     submitted: [] as string[],
     answers: [] as string[],
   },
+
   timetook: -1,
   score: {
     trial: -1,
     success: -1,
     fail: -1,
-  }
+  },
+
+  interactiveVisible: true,
 }
 
 export type TriviaChatInitialState = typeof initialState;
@@ -44,6 +47,10 @@ const reducer = createReducer(initialState, (builder) => {
 
   builder.addCase(actions.setInteractive, (state, action) => {
     state.interactive = action.payload;
+  });
+
+  builder.addCase(actions.setInteractiveVisibility, (state, action) => {
+    state.interactiveVisible = action.payload;
   })
 })
 

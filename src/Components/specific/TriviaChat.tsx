@@ -2,11 +2,9 @@ import React from 'react'
 import Chat from '../derivative/Chat';
 import { USER_NICK, useTriviaChat } from './TriviaChat/useTriviaChat';
 import EventHandler from './TriviaChat/EventHandler';
-import { useLocation } from 'react-router-dom';
 import { TriviaCategory } from '../../Interfaces/Category';
 import styled from 'styled-components';
 import { Fonts } from '../../Constants';
-import { getAbsoluteOffset } from '../../Utils/layout/getAbsoluteOffset';
 
 const TriviaChat = (props: TriviaChatProps) => {
   const [state, event, dispatch, sync] = useTriviaChat();
@@ -19,6 +17,7 @@ const TriviaChat = (props: TriviaChatProps) => {
           currentUser={USER_NICK}
           interactive={state.interactive}
           records={state.records}
+          interactiveVisible={state.interactiveVisible}
         />
       </ChatContainer>
       <EventHandler

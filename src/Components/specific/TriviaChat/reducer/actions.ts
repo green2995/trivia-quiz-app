@@ -7,3 +7,4 @@ export const setCurrentQuestion = createAction<TriviaChatInitialState["currentQu
 export const setTimetook = createAction<TriviaChatInitialState["timetook"]>("settimetook");
 export const setScore = createAction<TriviaChatInitialState["score"]>("setscore");
 export const setInteractive = createAction<TriviaChatInitialState["interactive"]>("setinteractive");
+export const setInteractiveVisibility = createAction<TriviaChatInitialState["interactiveVisible"]>("setinteractivevisibility")

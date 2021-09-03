@@ -35,19 +35,12 @@ export function useTriviaChat() {
   }>());
 
   const sync = useCurrent({
-    records: new CustomSubject<TriviaChatInitialState["records"]>([]),
-    questions: new CustomSubject<TriviaChatInitialState["questions"]>({
-      data: null,
-      error: false,
-      loading: false,
-    }),
-    currentQuestion: new CustomSubject<TriviaChatInitialState["currentQuestion"]>({
-      index: 0,
-      answers: [],
-      submitted: []
-    }),
-    timetook: new CustomSubject<TriviaChatInitialState["timetook"]>(-1),
-    interactive: new CustomSubject<TriviaChatInitialState["interactive"]>(undefined),
+    records: new CustomSubject(TriviaChatReducer.initialState.records),
+    questions: new CustomSubject(TriviaChatReducer.initialState.questions),
+    currentQuestion: new CustomSubject(TriviaChatReducer.initialState.currentQuestion),
+    timetook: new CustomSubject(TriviaChatReducer.initialState.timetook),
+    interactive: new CustomSubject(TriviaChatReducer.initialState.interactive),
+    interactiveVisible: new CustomSubject(TriviaChatReducer.initialState.interactiveVisible),
 
     time: {
       start: -1,
@@ -67,7 +60,7 @@ export function useTriviaChat() {
     category: {
       id: -1,
       name: "",
-    }    
+    }
   })
 
   const events = { action: actionEvent, reaction: reactionEvent };

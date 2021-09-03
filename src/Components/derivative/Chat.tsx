@@ -20,13 +20,13 @@ const Chat = (props: ChatProps) => {
     enter: { opacity: 1, x: 0 },
     config: config.stiff
   });
-  
+
   const transition_interactive = useTransition(props.interactive, {
     from: { opacity: 0 },
     enter: { opacity: 1 },
     config: config.slow
   })
-  
+
   function scrollToBottom(behavior: "auto" | "smooth" = "auto") {
     if (!containerRef.current) return;
     recordContainerRef.current?.scrollTo({
@@ -38,15 +38,15 @@ const Chat = (props: ChatProps) => {
   React.useEffect(() => {
     if (interactiveContainerRef.current) {
       springApi.start({
-        paddingBottom: interactiveContainerRef.current.clientHeight,
+        paddingBottom: props.interactiveVisible ? interactiveContainerRef.current.clientHeight : 0,
         onChange: () => scrollToBottom(),
         onStart: () => scrollToBottom(),
       });
     }
 
     scrollToBottom("smooth");
-  }, [props.records, props.interactive])
-  
+  }, [props.records, props.interactive, props.interactiveVisible])
+
   return (
     <Container ref={containerRef}>
       <RecordContainer ref={recordContainerRef} style={recordContainerSpring}>
@@ -59,8 +59,8 @@ const Chat = (props: ChatProps) => {
           </a.div>
         ))}
       </RecordContainer>
-      
-      <div style={{position: "relative"}}>
+
+      <div style={{ position: "relative", display: props.interactiveVisible ? "block" : "none" }}>
         <InteractiveContainer ref={interactiveContainerRef}>
           {transition_interactive((spring, item) => (
             <a.div style={spring}>
@@ -85,7 +85,7 @@ const Container = styled(Flex)`
   justify-content: space-between;
   box-shadow: 0 0 20px 0 rgba(0,0,0,0.2);
   background-color: rgba(255,255,255,0.5);
-
+  user-select: none;
 `;
 
 const RecordContainer = styled(a.div)`
@@ -116,6 +116,7 @@ type ChatProps = {
   records: ChatRecordProps[]
   interactive?: ChatInteractiveProps
   currentUser: string
+  interactiveVisible?: boolean
 }
 
 export default Chat

@@ -1,10 +1,9 @@
+import _ from 'lodash';
 import React from 'react'
-import { useSelector } from 'react-redux';
-import { useHistory, useLocation } from 'react-router';
-import { RootState } from '../../..';
+import { useHistory } from 'react-router';
 import TriviaAPI from '../../../Api/TriviaAPI';
 import { TriviaCategory } from '../../../Interfaces/Category';
-import { shuffle } from '../../../Utils/array/shuffle';
+import { TriviaFileSystem } from '../../../System';
 import TriviaChatReducer from './reducer';
 import { SYSTEM_NICK, USER_NICK, useTriviaChat } from './useTriviaChat';
 
@@ -20,7 +19,6 @@ const SENDER_USER = {
 const EventHandler = (props: EventHandlerProps) => {
   const history = useHistory();
   const { event, dispatch, sync, category } = props;
-  const categories = useSelector((state: RootState) => state.trivia.categories.data)!;
 
   React.useEffect(() => {
     const unsubscribers = [
@@ -39,21 +37,38 @@ const EventHandler = (props: EventHandlerProps) => {
       sync.interactive.on((next) => {
         dispatch(TriviaChatReducer.actions.setInteractive(next));
       }),
+      sync.interactiveVisible.on((next) => {
+        dispatch(TriviaChatReducer.actions.setInteractiveVisibility(next));
+      }),
 
       // LOAD_QUESTIONS
       event.action.addListener("loadQuestions", async () => {
         if (sync.questions.value.data) return;
 
+        sync.records.set((prev) => [
+          ...prev,
+          {
+            message: {
+              type: "text",
+              value: `카테고리 정보를 불러오고 있습니다.`
+            },
+            sender: SENDER_SYSTEM
+          }
+        ])
+
+        const categories = await TriviaAPI.fetchCategories()
         const selectedCategory = (() => {
-          const shuffled = shuffle(categories);
+          const shuffled = _.shuffle(categories);
           const randomOne = shuffled[0]
 
-          if (props.category.id === undefined) {
+          if (category.id === undefined) {
             return randomOne;
           } else {
-            return categories.find((item) => item.id === props.category.id) || randomOne;
+            return categories.find((item) => item.id === category.id) || randomOne;
           }
         })();
+
+        sync.category = selectedCategory;
 
         sync.questions.set({
           data: [],
@@ -150,7 +165,7 @@ const EventHandler = (props: EventHandlerProps) => {
           ...questions[i].incorrect_answers,
         ]
 
-        const shuffled = answerSet.length > 2 ? shuffle(answerSet) : answerSet;
+        const shuffled = answerSet.length > 2 ? _.shuffle(answerSet) : answerSet;
 
         sync.currentQuestion.set((prev) => ({
           ...prev,
@@ -249,7 +264,8 @@ const EventHandler = (props: EventHandlerProps) => {
       }),
 
       event.reaction.addListener("answer_incorrect", () => {
-        const correct = sync.questions.value.data![sync.currentQuestion.value.index].correct_answer;
+        const cur = sync.questions.value.data![sync.currentQuestion.value.index];
+        const correct = cur.correct_answer;
         sync.records.set((prev) => [
           ...prev,
           {
@@ -263,6 +279,12 @@ const EventHandler = (props: EventHandlerProps) => {
         ]);
 
         sync.score.fail += 1;
+
+        TriviaFileSystem.saveInccorectAnswer(_.cloneDeep({
+          category: sync.category,
+          trivia: cur,
+          userAnswer: sync.currentQuestion.value.submitted.slice(-1)[0],
+        }))
 
         // single trial mode
         event.action.emit("nextQuestion");
@@ -301,6 +323,14 @@ const EventHandler = (props: EventHandlerProps) => {
         sync.timetook.set(sync.time.end - sync.time.start);
         dispatch(TriviaChatReducer.actions.setScore(sync.score))
 
+        TriviaFileSystem.saveTriviaResult(_.cloneDeep({
+          category: sync.category,
+          timetook: sync.timetook.value,
+          score: sync.score,
+        }))
+
+        sync.interactiveVisible.set(false);
+
         sync.records.set((prev) => [
           ...prev,
           {
@@ -318,12 +348,14 @@ const EventHandler = (props: EventHandlerProps) => {
                 score: sync.score,
                 timetook: sync.timetook.value,
                 onPressRetry: () => {
+                  sync.interactiveVisible.set(true);
                   event.action.emit("retry");
                 },
                 onPressQuit: () => {
                   event.action.emit("quit");
                 },
                 onPressNext: () => {
+                  sync.interactiveVisible.set(true);
                   event.action.emit("nextSet");
                 }
               }
@@ -442,7 +474,7 @@ const reactions = {
 }
 
 function getRandomReaction(type: keyof typeof reactions) {
-  return shuffle(reactions[type])[0]
+  return _.shuffle(reactions[type])[0]
 }
 
 type EventHandlerProps = {

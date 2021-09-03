@@ -1,7 +1,7 @@
 import React from 'react'
-import { TriviaCategory } from '../../Interfaces/Category'
+import { TriviaCategory } from '../../../Interfaces/Category'
 import styled from "styled-components"
-import { AbsoluteFill, Flex } from '../../Styled/Generic'
+import { AbsoluteFill, Flex } from '../../../Styled/Generic'
 import { Link } from 'react-router-dom'
 import { useDispatch } from 'react-redux'
 
@@ -26,6 +26,7 @@ const Container = styled(Flex)`
   border: 1px solid black;
   height: 10rem;
   margin: 1rem;
+  user-select: none;
 `;
 
 const Content = styled(AbsoluteFill)`
