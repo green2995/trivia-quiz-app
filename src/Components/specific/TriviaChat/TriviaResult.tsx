@@ -1,7 +1,7 @@
 import React from 'react'
 import { Flex } from '../../../Styled/Generic';
 import { Col, Row } from '../../../Styled/Grid';
-import { TriviaChatInitialState } from './reducer/reducer';
+import { TriviaChatInitialState } from './slice';
 import {
   Button,
   Container,

@@ -2,10 +2,11 @@ import React from 'react'
 import styled from 'styled-components';
 import { Fonts } from '../../../Constants';
 import { Flex, AbsoluteFill } from '../../../Styled/Generic';
-import { TriviaSummaryState } from '../TriviaSummary/reducer/reducer';
+import { TriviaFileSystem } from '../../../System';
+import { TriviaSummaryState } from './slice';
 
-const TriviaStat = ({state}: TriviaStatProps) => {
-  const totalScore = state.triviaResults.reduce((acc, ele) => ({
+const TriviaStat = ({triviaResults}: TriviaStatProps) => {
+  const totalScore = triviaResults.reduce((acc, ele) => ({
     trial: acc.trial + ele.score.trial,
     fail: acc.fail + ele.score.fail,
     success: acc.success + ele.score.success,
@@ -16,11 +17,11 @@ const TriviaStat = ({state}: TriviaStatProps) => {
   })
 
   return (
-    <div>
+    <Container>
       <Stat>
         <div>
           정답률
-            </div>
+        </div>
         <StatBarContainer>
           <StatBarFill
             positive
@@ -30,9 +31,14 @@ const TriviaStat = ({state}: TriviaStatProps) => {
             }}
           />
           <StatBarHover>
-            <PercentageText>
+            <StatHoverText>
+              <span>
               {(totalScore.success / totalScore.trial * 100).toFixed(2)}%
-                </PercentageText>
+              </span>
+              <span style={{fontSize: "0.7rem", marginLeft: "0.5rem"}}>
+               ({totalScore.success}개)
+              </span>
+            </StatHoverText>
           </StatBarHover>
         </StatBarContainer>
       </Stat>
@@ -40,7 +46,7 @@ const TriviaStat = ({state}: TriviaStatProps) => {
       <Stat>
         <div>
           오답률
-            </div>
+        </div>
         <StatBarContainer>
           <StatBarFill
             style={{
@@ -49,21 +55,29 @@ const TriviaStat = ({state}: TriviaStatProps) => {
             }}
           />
           <StatBarHover>
-            <PercentageText>
-              {(totalScore.fail / totalScore.trial * 100).toFixed(2)}%
-                </PercentageText>
+            <StatHoverText>
+              <span>
+                {(totalScore.fail / totalScore.trial * 100).toFixed(2)}%
+              </span>
+              <span style={{fontSize: "0.7rem", marginLeft: "0.5rem"}}>
+               ({totalScore.fail}개)
+              </span>
+            </StatHoverText>
           </StatBarHover>
         </StatBarContainer>
       </Stat>
-    </div>
+    </Container>
   )
 }
 
+const Container = styled.div`
+  user-select: none;
+`;
 
 const Stat = styled.div`
   display: flex;
   flex-direction: row;
-  font-family: ${Fonts.어그로체B};
+  font-family: ${Fonts.어그로체L};
   font-size: 1rem;
   justify-content: center;
   align-items: center;
@@ -88,14 +102,14 @@ const StatBarHover = styled(AbsoluteFill)`
   align-items: center;
 `;
 
-const PercentageText = styled.div`
-  font-family: ${Fonts.어비찌빠빠체};
+const StatHoverText = styled.div`
+  font-family: ${Fonts.어그로체B};
   text-shadow: 1px 2px 5px black;
   color: white;
 `;
 
 type TriviaStatProps = {
-  state: TriviaSummaryState
+  triviaResults: TriviaFileSystem.TriviaResult[]
 }
 
 export default TriviaStat

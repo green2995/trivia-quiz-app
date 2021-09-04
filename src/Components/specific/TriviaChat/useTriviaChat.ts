@@ -3,8 +3,7 @@ import { useCurrent } from "../../../Hooks/useCurrent";
 import { Trivia } from "../../../Interfaces/TriviaQuestion";
 import { CustomEventEmitter } from "../../../Utils/event/CustomEventEmitter";
 import { CustomSubject } from "../../../Utils/event/CustomSubject";
-import TriviaChatReducer from "./reducer";
-import { initialState, TriviaChatInitialState } from "./reducer/reducer";
+import { TriviaChatSlice } from "./slice";
 
 export const USER_NICK = "user";
 export const SYSTEM_NICK = "스템이";
@@ -21,7 +20,7 @@ export function useTriviaChat() {
     resetPlay: () => void
     initialize: () => void
   }>());
-  
+
   const reactionEvent = useCurrent(new CustomEventEmitter<{
     loadQuestions_success: (questions: Trivia[]) => void
     loadQuestions_fail: () => void
@@ -35,12 +34,12 @@ export function useTriviaChat() {
   }>());
 
   const sync = useCurrent({
-    records: new CustomSubject(TriviaChatReducer.initialState.records),
-    questions: new CustomSubject(TriviaChatReducer.initialState.questions),
-    currentQuestion: new CustomSubject(TriviaChatReducer.initialState.currentQuestion),
-    timetook: new CustomSubject(TriviaChatReducer.initialState.timetook),
-    interactive: new CustomSubject(TriviaChatReducer.initialState.interactive),
-    interactiveVisible: new CustomSubject(TriviaChatReducer.initialState.interactiveVisible),
+    records: new CustomSubject(TriviaChatSlice.initialState.records),
+    questions: new CustomSubject(TriviaChatSlice.initialState.questions),
+    currentQuestion: new CustomSubject(TriviaChatSlice.initialState.currentQuestion),
+    timetook: new CustomSubject(TriviaChatSlice.initialState.timetook),
+    interactive: new CustomSubject(TriviaChatSlice.initialState.interactive),
+    interactiveVisible: new CustomSubject(TriviaChatSlice.initialState.interactiveVisible),
 
     time: {
       start: -1,
@@ -65,7 +64,7 @@ export function useTriviaChat() {
 
   const events = { action: actionEvent, reaction: reactionEvent };
 
-  const [state, dispatch] = React.useReducer(TriviaChatReducer.reducer, TriviaChatReducer.initialState);
+  const [state, dispatch] = React.useReducer(TriviaChatSlice.reducer, TriviaChatSlice.initialState);
 
   return [
     state,

@@ -4,7 +4,7 @@ import { useHistory } from 'react-router';
 import TriviaAPI from '../../../Api/TriviaAPI';
 import { TriviaCategory } from '../../../Interfaces/Category';
 import { TriviaFileSystem } from '../../../System';
-import TriviaChatReducer from './reducer';
+import { TriviaChatSlice } from './slice';
 import { SYSTEM_NICK, USER_NICK, useTriviaChat } from './useTriviaChat';
 
 const SENDER_SYSTEM = {
@@ -23,22 +23,22 @@ const EventHandler = (props: EventHandlerProps) => {
   React.useEffect(() => {
     const unsubscribers = [
       sync.currentQuestion.on((next) => {
-        dispatch(TriviaChatReducer.actions.setCurrentQuestion(next));
+        dispatch(TriviaChatSlice.actions.setCurrentQuestion(next));
       }),
       sync.questions.on((next) => {
-        dispatch(TriviaChatReducer.actions.setQuestions(next));
+        dispatch(TriviaChatSlice.actions.setQuestions(next));
       }),
       sync.records.on((next) => {
-        dispatch(TriviaChatReducer.actions.setRecorods(next));
+        dispatch(TriviaChatSlice.actions.setRecords(next));
       }),
       sync.timetook.on((next) => {
-        dispatch(TriviaChatReducer.actions.setTimetook(next));
+        dispatch(TriviaChatSlice.actions.setTimetook(next));
       }),
       sync.interactive.on((next) => {
-        dispatch(TriviaChatReducer.actions.setInteractive(next));
+        dispatch(TriviaChatSlice.actions.setInteractive(next));
       }),
       sync.interactiveVisible.on((next) => {
-        dispatch(TriviaChatReducer.actions.setInteractiveVisibility(next));
+        dispatch(TriviaChatSlice.actions.setInteractiveVisibility(next));
       }),
 
       // LOAD_QUESTIONS
@@ -321,7 +321,7 @@ const EventHandler = (props: EventHandlerProps) => {
       event.reaction.addListener("completeQuiz", () => {
         sync.time.end = Date.now();
         sync.timetook.set(sync.time.end - sync.time.start);
-        dispatch(TriviaChatReducer.actions.setScore(sync.score))
+        dispatch(TriviaChatSlice.actions.setScore(sync.score))
 
         TriviaFileSystem.saveTriviaResult(_.cloneDeep({
           category: sync.category,
@@ -329,39 +329,40 @@ const EventHandler = (props: EventHandlerProps) => {
           score: sync.score,
         }))
 
-        sync.interactiveVisible.set(false);
-
-        sync.records.set((prev) => [
-          ...prev,
-          {
-            sender: SENDER_SYSTEM,
-            message: {
-              type: "text",
-              value: "모든 문제를 완료했습니다."
-            }
-          },
-          {
-            sender: SENDER_SYSTEM,
-            message: {
-              type: "triviaResult",
-              value: {
-                score: sync.score,
-                timetook: sync.timetook.value,
-                onPressRetry: () => {
-                  sync.interactiveVisible.set(true);
-                  event.action.emit("retry");
-                },
-                onPressQuit: () => {
-                  event.action.emit("quit");
-                },
-                onPressNext: () => {
-                  sync.interactiveVisible.set(true);
-                  event.action.emit("nextSet");
+        setTimeout(() => {
+          sync.interactiveVisible.set(false);
+          sync.records.set((prev) => [
+            ...prev,
+            {
+              sender: SENDER_SYSTEM,
+              message: {
+                type: "text",
+                value: "모든 문제를 완료했습니다."
+              }
+            },
+            {
+              sender: SENDER_SYSTEM,
+              message: {
+                type: "triviaResult",
+                value: {
+                  score: sync.score,
+                  timetook: sync.timetook.value,
+                  onPressRetry: () => {
+                    sync.interactiveVisible.set(true);
+                    event.action.emit("retry");
+                  },
+                  onPressQuit: () => {
+                    event.action.emit("quit");
+                  },
+                  onPressNext: () => {
+                    sync.interactiveVisible.set(true);
+                    event.action.emit("nextSet");
+                  }
                 }
               }
-            }  
-          }
-        ])
+            }
+          ])
+        }, 1000)
 
       }),
 

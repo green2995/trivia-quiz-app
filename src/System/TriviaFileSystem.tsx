@@ -1,9 +1,9 @@
-import { TriviaChatInitialState } from "../Components/specific/TriviaChat/reducer/reducer";
+import { TriviaChatInitialState } from "../Components/specific/TriviaChat/slice";
 import { TriviaCategory } from "../Interfaces/Category";
 import { Trivia } from "../Interfaces/TriviaQuestion";
 import localforage from "localforage"
 
-export async function saveInccorectAnswer(incorrectAnswer: IncorrectAnswer) {
+export async function saveInccorectAnswer(incorrectAnswer: FailedTrivia) {
   const prev = await getInccorectAnswers();
 
   return localforage.setItem(TriviaFileSystemKeys.INCORRECT_ANSWERS, [
@@ -32,7 +32,7 @@ export async function getTriviaResults() {
 
 export async function getInccorectAnswers() {
   try {
-    const data = await localforage.getItem<IncorrectAnswer[]>(TriviaFileSystemKeys.INCORRECT_ANSWERS)
+    const data = await localforage.getItem<FailedTrivia[]>(TriviaFileSystemKeys.INCORRECT_ANSWERS)
     return data || [];
   } catch(e) {
     return [];
@@ -48,7 +48,7 @@ const TriviaFileSystemKeys = {
   TRIVIA_RESULTS: "trivia_results",
 }
 
-export type IncorrectAnswer = {
+export type FailedTrivia = {
   category: TriviaCategory,
   trivia: Trivia,
   userAnswer: string

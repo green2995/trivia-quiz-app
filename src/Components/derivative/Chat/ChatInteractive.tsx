@@ -2,8 +2,6 @@ import React from 'react'
 import styled from 'styled-components';
 import { Fonts } from '../../../Constants';
 import { Flex } from '../../../Styled/Generic';
-import { initialState } from '../../specific/TriviaChat/reducer/reducer';
-import TriviaResult, { TriviaResultProps } from '../../specific/TriviaChat/TriviaResult';
 import SelectMessage, { SelectMessageProps } from './SelectMessage';
 
 const ChatInteractive = (props: ChatInteractiveProps) => {
