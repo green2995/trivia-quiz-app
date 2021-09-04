@@ -245,6 +245,8 @@ const EventHandler = (props: EventHandlerProps) => {
       }),
 
       event.reaction.addListener("answer_correct", () => {
+        TriviaFileSystem.countSuccess();
+
         const correct = sync.questions.value.data![sync.currentQuestion.value.index].correct_answer;
         sync.records.set((prev) => [
           ...prev,
@@ -264,6 +266,8 @@ const EventHandler = (props: EventHandlerProps) => {
       }),
 
       event.reaction.addListener("answer_incorrect", () => {
+        TriviaFileSystem.countFail();
+
         const cur = sync.questions.value.data![sync.currentQuestion.value.index];
         const correct = cur.correct_answer;
         sync.records.set((prev) => [
@@ -280,7 +284,7 @@ const EventHandler = (props: EventHandlerProps) => {
 
         sync.score.fail += 1;
 
-        TriviaFileSystem.saveInccorectAnswer(_.cloneDeep({
+        TriviaFileSystem.saveFailedTrivia(_.cloneDeep({
           category: sync.category,
           trivia: cur,
           userAnswer: sync.currentQuestion.value.submitted.slice(-1)[0],
@@ -322,12 +326,6 @@ const EventHandler = (props: EventHandlerProps) => {
         sync.time.end = Date.now();
         sync.timetook.set(sync.time.end - sync.time.start);
         dispatch(TriviaChatSlice.actions.setScore(sync.score))
-
-        TriviaFileSystem.saveTriviaResult(_.cloneDeep({
-          category: sync.category,
-          timetook: sync.timetook.value,
-          score: sync.score,
-        }))
 
         setTimeout(() => {
           sync.interactiveVisible.set(false);

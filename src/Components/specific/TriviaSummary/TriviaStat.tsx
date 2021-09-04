@@ -5,17 +5,7 @@ import { Flex, AbsoluteFill } from '../../../Styled/Generic';
 import { TriviaFileSystem } from '../../../System';
 import { TriviaSummaryState } from './slice';
 
-const TriviaStat = ({triviaResults}: TriviaStatProps) => {
-  const totalScore = triviaResults.reduce((acc, ele) => ({
-    trial: acc.trial + ele.score.trial,
-    fail: acc.fail + ele.score.fail,
-    success: acc.success + ele.score.success,
-  }), {
-    trial: 0,
-    fail: 0,
-    success: 0,
-  })
-
+const TriviaStat = ({trial, fail, success}: TriviaStatProps) => {
   return (
     <Container>
       <Stat>
@@ -26,17 +16,17 @@ const TriviaStat = ({triviaResults}: TriviaStatProps) => {
           <StatBarFill
             positive
             style={{
-              width: `${(totalScore.success / totalScore.trial) * 100}%`,
+              width: `${(success / trial) * 100}%`,
               backgroundColor: "mediumseagreen"
             }}
           />
           <StatBarHover>
             <StatHoverText>
               <span>
-              {(totalScore.success / totalScore.trial * 100).toFixed(2)}%
+              {success > 0 ? `${(success / trial * 100).toFixed(2)}%` : "기록이 없습니다."}
               </span>
               <span style={{fontSize: "0.7rem", marginLeft: "0.5rem"}}>
-               ({totalScore.success}개)
+               ({success}개)
               </span>
             </StatHoverText>
           </StatBarHover>
@@ -50,17 +40,17 @@ const TriviaStat = ({triviaResults}: TriviaStatProps) => {
         <StatBarContainer>
           <StatBarFill
             style={{
-              width: `${(totalScore.fail / totalScore.trial) * 100}%`,
+              width: `${(fail / trial) * 100}%`,
               backgroundColor: "tomato"
             }}
           />
           <StatBarHover>
             <StatHoverText>
               <span>
-                {(totalScore.fail / totalScore.trial * 100).toFixed(2)}%
+              {fail > 0 ? `${(fail / trial * 100).toFixed(2)}%` : "기록이 없습니다."}
               </span>
               <span style={{fontSize: "0.7rem", marginLeft: "0.5rem"}}>
-               ({totalScore.fail}개)
+               ({fail}개)
               </span>
             </StatHoverText>
           </StatBarHover>
@@ -108,8 +98,6 @@ const StatHoverText = styled.div`
   color: white;
 `;
 
-type TriviaStatProps = {
-  triviaResults: TriviaFileSystem.TriviaResult[]
-}
+type TriviaStatProps = TriviaFileSystem.TriviaScore
 
 export default TriviaStat

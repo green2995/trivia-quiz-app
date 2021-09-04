@@ -16,8 +16,6 @@ const SelectMessage = (props: SelectMessageProps) => {
       {choices.map((item, i) => (
         <SelectButton
           key={i}
-          shouldCareChosen={chosen !== undefined}
-          shouldCareCorrect={correct !== undefined}
           chosen={item === chosen}
           correct={item === correct}
           onClick={onClick.bind(null, item)}

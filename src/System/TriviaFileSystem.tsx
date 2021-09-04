@@ -1,62 +1,82 @@
-import { TriviaChatInitialState } from "../Components/specific/TriviaChat/slice";
-import { TriviaCategory } from "../Interfaces/Category";
 import { Trivia } from "../Interfaces/TriviaQuestion";
 import localforage from "localforage"
+import { LocalIdStore } from "../Utils/data/LocalIdStore";
 
-export async function saveInccorectAnswer(incorrectAnswer: FailedTrivia) {
-  const prev = await getInccorectAnswers();
+const questionIdStore = new LocalIdStore("trivia_question_id");
 
-  return localforage.setItem(TriviaFileSystemKeys.INCORRECT_ANSWERS, [
-    ...prev,
-    incorrectAnswer
-  ]);
+export async function getFailedTrivias() {
+  try {
+    const data = await localforage.getItem<Record<string, FailedTrivia>>(TriviaFileSystemKeys.FAILED_TRIVIA_MAP)
+    return data || {};
+  } catch(e) {
+    return {};
+  }
 }
 
-export async function saveTriviaResult(result: TriviaResult) {
-  const prev = await getTriviaResults();
+export async function saveFailedTrivia(failed: FailedTrivia) {
+  const prev = await getFailedTrivias();
+  const id = await questionIdStore.getId(failed.trivia.question);
+
+  return localforage.setItem(TriviaFileSystemKeys.FAILED_TRIVIA_MAP, {
+    ...prev,
+    [id]: failed,
+  });
+}
+
+export async function removeFailedTrivia(question: string) {
+  const prev = await getFailedTrivias();
+  const id = await questionIdStore.getId(question);
+  delete prev[id];
   
-  return localforage.setItem(TriviaFileSystemKeys.TRIVIA_RESULTS, [
+  return localforage.setItem(TriviaFileSystemKeys.FAILED_TRIVIA_MAP, prev);
+}
+
+export async function getTriviaScore() {
+  try {
+    const data = await localforage.getItem<TriviaScore>(TriviaFileSystemKeys.TRIVIA_SCORE);
+    return data || {trial: 0, fail: 0, success: 0};
+  } catch(e) {
+    return {trial: 0, fail: 0, success: 0};
+  }
+}
+
+export async function countSuccess() {
+  const prev = await getTriviaScore();
+  
+  return localforage.setItem(TriviaFileSystemKeys.TRIVIA_SCORE, {
     ...prev,
-    result
-  ])
+    trial: prev.trial + 1,
+    success: prev.success + 1,
+  })
 }
 
-export async function getTriviaResults() {
-  try {
-    const data = await localforage.getItem<TriviaResult[]>(TriviaFileSystemKeys.TRIVIA_RESULTS);
-    return data || [];
-  } catch(e) {
-    return [];
-  }
+export async function countFail() {
+  const prev = await getTriviaScore();
+  
+  return localforage.setItem(TriviaFileSystemKeys.TRIVIA_SCORE, {
+    ...prev,
+    trial: prev.trial + 1,
+    fail: prev.fail + 1,
+  })
 }
 
-export async function getInccorectAnswers() {
-  try {
-    const data = await localforage.getItem<FailedTrivia[]>(TriviaFileSystemKeys.INCORRECT_ANSWERS)
-    return data || [];
-  } catch(e) {
-    return [];
-  }
-}
 
 export async function clearAll() {
   return localforage.clear();
 }
 
 const TriviaFileSystemKeys = {
-  INCORRECT_ANSWERS: "incorrect_answers",
-  TRIVIA_RESULTS: "trivia_results",
+  FAILED_TRIVIA_MAP: "failed_trivia_map",
+  TRIVIA_SCORE: "trivia_score",
 }
 
 export type FailedTrivia = {
-  category: TriviaCategory,
   trivia: Trivia,
   userAnswer: string
 }
 
-export type TriviaResult = {
-  category: TriviaCategory,
-  score: TriviaChatInitialState["score"],
-  timetook: number
+export type TriviaScore = {
+  success: number,
+  fail: number,
+  trial: number,  
 }
-

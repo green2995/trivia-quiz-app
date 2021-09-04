@@ -9,8 +9,6 @@ overflow: hidden;
 `;
 
 export const SelectButton = styled.button<{
-shouldCareChosen?: boolean
-shouldCareCorrect?: boolean
 chosen?: boolean
 correct?: boolean
 }>`
