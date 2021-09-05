@@ -8,19 +8,19 @@ import {
 import Header from './Components/specific/Header'
 import Home from './Pages/Home'
 import Trivia from './Pages/Trivia'
-import { AbsoluteFill } from './Styled/Generic'
+import { AbsoluteFill, Flex } from './Styled/Generic'
 
 const Routes = () => {
   return (
     <Router>
       <Header/>
-      <AbsoluteFill style={{marginTop: "3rem"}}>
+      <Flex style={{flex: 1}}>
         <Switch>
           <Route exact path={"/"} render={() => <Redirect to={"/home"} />} />
           <Route path={"/home"} component={Home} />
           <Route path={"/trivia"} component={Trivia} />
         </Switch>
-      </AbsoluteFill>
+      </Flex>
     </Router>
   )
 }

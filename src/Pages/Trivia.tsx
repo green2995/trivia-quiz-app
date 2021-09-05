@@ -52,7 +52,7 @@ const Container = styled.div`
   overflow: hidden;
   display: flex;
   flex-direction: column;
-  /* justify-content: center; */
+  justify-content: center;
   align-items: center;
 `;
 
