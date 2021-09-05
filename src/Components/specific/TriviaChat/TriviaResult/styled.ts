@@ -20,14 +20,14 @@ user-select: none;
 
 export const Title = styled.div`
 font-family: ${Fonts.어그로체B};
-font-size: 2rem;
+font-size: 1.2rem;
 `;
 
 
 export const PropertyContainer = styled(Flex)`
 flex-direction: row;
 align-items: center;
-margin: 0.5rem;
+margin: 0.3rem;
 `;
 
 export const PropertyTitle = styled.div`
@@ -40,8 +40,8 @@ width: 5rem;
 
 export const PropertyValue = styled.div<{ backgroundColor?: string }>`
 font-family: ${Fonts.어그로체B};
-font-size: 1.2rem;
-padding: 0.5rem;
+font-size: 1rem;
+padding: 0.3rem;
 background-color: ${(({ backgroundColor }) => backgroundColor || "slategray")};
 border-radius: 0.5rem;
 color: white;
@@ -49,27 +49,27 @@ color: white;
 
 export const Score = styled.div`
 @media only screen and (min-width: 480px) {
-  font-size: 3rem;
+  font-size: 2rem;
 }
 
 font-family: ${Fonts.어비찌빠빠체};
-font-size: 2rem;
+font-size: 1.2rem;
 `;
 
 export const ScoreContainer = styled(Flex)`
 flex: 1;
 justify-content: center;
 align-items: center;
-margin-top: 2rem;
+margin-top: 0.5rem;
 `;
 
 export const Underline = styled.div`
 width: calc(100%);
 left: 0;
-height: 0.5rem;
+height: 0.3rem;
 background-color: red;
 position: absolute;
-bottom: 0;
+bottom: 0.2rem;
 `;
 
 export const Button = styled(Flex) <{
@@ -77,8 +77,8 @@ direction?: "left" | "right",
 type?: "retry" | "quit" | "next"
 }>`
 flex: 1;
-font-size: 1.5rem;
-padding: 1rem;
+font-size: 1rem;
+padding: 0.8rem;
 color: white;
 border-radius: 1rem;
 text-align: center;
@@ -92,7 +92,7 @@ ${({ direction }) => {
   }
   
   margin-right: 0;
-  margin-bottom: 1rem;      
+  margin-bottom: 0.6rem;
   `;
 
   if (direction === "right") return `

@@ -55,14 +55,14 @@ const TriviaResult = (props: TriviaResultProps) => {
           </ScoreContainer>
         </Col>
       </Row>
-      <Row style={{marginTop: "2rem"}}>
+      <Row style={{marginTop: "1rem"}}>
         <Col>
           <Button onClick={onPressNext} type={"next"}>
             다음문제
           </Button>
         </Col>
       </Row>
-      <Row style={{marginTop: "1rem"}}>
+      <Row style={{marginTop: "0.6rem"}}>
         <Col sm={6}>
           <Button onClick={onPressRetry} type={"retry"} direction={"left"}>
             다시풀기
