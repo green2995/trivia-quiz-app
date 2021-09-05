@@ -89,7 +89,7 @@ export const SelectButton = styled.button<{
     // not yet selected any
     if (!shouldCareChosen && !chosen) return `
     background-color: blue;
-    &:hover { background-color: navy; }
+    // &:hover { background-color: navy; }
     &:active { background-color: blueviolet; }
     `;
   
