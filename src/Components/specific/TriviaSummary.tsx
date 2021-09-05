@@ -1,7 +1,4 @@
-import { useTransition } from '@react-spring/core';
-import { shuffle } from 'lodash';
 import React from 'react'
-import { a } from 'react-spring';
 import styled from 'styled-components';
 import { Fonts } from '../../Constants';
 import { AbsoluteFill, Flex } from '../../Styled/Generic';
@@ -12,14 +9,9 @@ import TriviaStat from './TriviaSummary/TriviaStat';
 
 const TriviaSummray = () => {
   const [state, dispatch] = React.useReducer(TriviaSummarySlice.reducer, TriviaSummarySlice.initialState);
-  const transition = useTransition(null, ({
-    from: { opacity: 0 },
-    enter: { opacity: 1 },
-    leave: { opacity: 0 },
-  }))
 
   React.useEffect(() => {
-    TriviaFileSystem.clearAll();
+    // TriviaFileSystem.clearAll();
     initialize();
   }, [])
 
@@ -70,12 +62,13 @@ const TriviaSummray = () => {
 
   return (
     <Container>
+      <SubTitle>정답률 및 오답률</SubTitle>
       <TriviaStat {...state.triviaScore} />
       {(state.currentFailed.trivia) && (
         <WrongTriviaContainer>
-          <WrongTriviaTitle>
+          <SubTitle>
             최근에 <span style={{ color: "red" }}>틀린</span> 문제 ({state.currentFailed.index + 1} / {state.failedTrivias.length})
-          </WrongTriviaTitle>
+          </SubTitle>
           <div style={{ position: "relative" }}>
             <TinyTrivia
               onPressChoice={onPressChoice}
@@ -84,24 +77,18 @@ const TriviaSummray = () => {
               {...state.currentFailed.trivia}
             />
             {state.overcameFailure && (
-              transition((spring) => {
-                return (
-                  <a.div style={spring}>
-                    <AbsoluteFill
-                      style={{
-                        display: "flex",
-                        justifyContent: "center",
-                        alignItems: "center",
-                        backgroundColor: "rgba(255,255,255,0.7)"
-                      }}>
-                      <Button
-                        children={state.overcomeCount === state.failedTrivias.length ? "완료" : "다시 풀기"}
-                        onClick={initialize}
-                      />
-                    </AbsoluteFill>
-                  </a.div>
-                )
-              })
+              <AbsoluteFill
+                style={{
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  backgroundColor: "rgba(255,255,255,0.7)"
+                }}>
+                <Button
+                  children={state.overcomeCount === state.failedTrivias.length ? "완료" : "다시 풀기"}
+                  onClick={initialize}
+                />
+              </AbsoluteFill>
             )}
           </div>
         </WrongTriviaContainer>
@@ -113,17 +100,21 @@ const TriviaSummray = () => {
 const Container = styled.div`
   width: 100%;
   padding: 1rem;
+  padding-top: 2rem;
+  user-select: none;
 `;
-
 
 const WrongTriviaContainer = styled.div`
-  margin-top: 1rem;
+  margin-bottom: 3rem;
+  margin-top: 4rem;
 `;
 
-const WrongTriviaTitle = styled.div`
+const SubTitle = styled.div`
   font-family: ${Fonts.어그로체L};
-  margin-left: 1rem;
+  font-size: 1rem;
+  margin-left: 1.5rem;
   margin-bottom: 0.3rem;
+  color: black;
 `;
 
 const Button = styled.button`
@@ -136,7 +127,7 @@ const Button = styled.button`
   font-size: 1rem;
   font-family: ${Fonts.어그로체B};
   border-radius: 1rem;
-  box-shadow: 0 0.8rem 2rem 0 grey;
+  box-shadow: 0 0.8rem 2rem 0 rgba(0,0,0,0.2);
   
   &:hover { background-color: navy; }
   &:active { background-color: blueviolet; }

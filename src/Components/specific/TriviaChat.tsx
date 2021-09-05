@@ -5,6 +5,7 @@ import EventHandler from './TriviaChat/EventHandler';
 import { TriviaCategory } from '../../Interfaces/Category';
 import styled from 'styled-components';
 import { Fonts } from '../../Constants';
+import { AbsoluteFill } from '../../Styled/Generic';
 
 const TriviaChat = (props: TriviaChatProps) => {
   const [state, event, dispatch, sync] = useTriviaChat();
@@ -30,27 +31,16 @@ const TriviaChat = (props: TriviaChatProps) => {
   )
 }
 
-const Conatiner = styled.div`
-  width: 100%;
-  height: 100%;
+const Conatiner = styled(AbsoluteFill)`
   display: flex;
   flex-direction: column;
   align-items: center;
-  /* padding-top: 5rem; */
-  /* padding-bottom: 5rem; */
+  background-color: rgba(255,255,255,0.5);
 `;
 
 const ChatContainer = styled.div`
   width: 100%;
   height: 100%;
-`;
-
-const Title = styled.div`
-  font-family: ${Fonts.어그로체B};
-  padding: 1rem;
-  font-size: 2rem;
-  color: white;
-  text-shadow: 0 2px 0 black;
 `;
 
 type TriviaChatProps = {

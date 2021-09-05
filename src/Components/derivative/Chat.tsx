@@ -75,7 +75,7 @@ const Chat = (props: ChatProps) => {
 
 const Container = styled(Flex)`
   width: 100%;
-  height: calc(100vh - 4rem);
+  height: 100%;
   /* max-width: 600px; */
   
   /* @media only screen and (min-width: 600px) {

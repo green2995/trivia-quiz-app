@@ -16,11 +16,18 @@ const Header = () => {
 }
 
 const Container = styled.div`
-  background-color: black;
   display: flex;
-  height: 4rem;
+  height: 3rem;
   align-items: center;
   padding-left: 1rem;
+  /* border: 1px solid lightgrey; */
+  border-top-width: 0;
+  border-left-width: 0;
+  border-right-width: 0;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  background-color: black;
 `;
 
 const Title = styled.div`
@@ -32,6 +39,7 @@ const Title = styled.div`
   padding-left: 1rem;
   padding-right: 1rem;
   border-radius: 2rem;
+  font-size: 0.8rem;
 `;
 
 export default Header

@@ -25,7 +25,7 @@ const TriviaStat = ({trial, fail, success}: TriviaStatProps) => {
               <span>
               {success > 0 ? `${(success / trial * 100).toFixed(2)}%` : "기록이 없습니다."}
               </span>
-              <span style={{fontSize: "0.7rem", marginLeft: "0.5rem"}}>
+              <span style={{fontSize: "0.5rem", marginLeft: "0.5rem"}}>
                ({success}개)
               </span>
             </StatHoverText>
@@ -49,7 +49,7 @@ const TriviaStat = ({trial, fail, success}: TriviaStatProps) => {
               <span>
               {fail > 0 ? `${(fail / trial * 100).toFixed(2)}%` : "기록이 없습니다."}
               </span>
-              <span style={{fontSize: "0.7rem", marginLeft: "0.5rem"}}>
+              <span style={{fontSize: "0.5rem", marginLeft: "0.5rem"}}>
                ({fail}개)
               </span>
             </StatHoverText>
@@ -62,6 +62,11 @@ const TriviaStat = ({trial, fail, success}: TriviaStatProps) => {
 
 const Container = styled.div`
   user-select: none;
+  padding: 1rem;
+  color: black;
+  border-radius: 1rem;
+  background-color: rgba(255,255,255,0.7);
+  box-shadow: 0 0.8rem 2rem 0 rgba(0,0,0,0.2);
 `;
 
 const Stat = styled.div`
@@ -73,17 +78,20 @@ const Stat = styled.div`
   align-items: center;
 `;
 
-const StatBarFill = styled(Flex) <{ positive?: boolean }>`
-  box-shadow: inset 0 0 10px 5px ${({ positive }) => positive ? "cyan" : "crimson"};
-`;
-
 const StatBarContainer = styled(Flex)`
   flex: 1;
   flex-direction: row;
   margin-left: 1rem;
-  border: 1px solid black;
   height: 2rem;
   background-color: dimgrey;
+  border-radius: 1rem;
+  overflow: hidden;
+  box-shadow: 0 0.2rem 0 0 rgba(0,0,0,0.1);
+`;
+
+
+const StatBarFill = styled(Flex) <{ positive?: boolean }>`
+  box-shadow: inset 0 0 1rem ${({ positive }) => positive ? "springgreen" : "pink"};
 `;
 
 const StatBarHover = styled(AbsoluteFill)`
@@ -96,6 +104,7 @@ const StatHoverText = styled.div`
   font-family: ${Fonts.어그로체B};
   text-shadow: 1px 2px 5px black;
   color: white;
+  font-size: 0.7rem;
 `;
 
 type TriviaStatProps = TriviaFileSystem.TriviaScore

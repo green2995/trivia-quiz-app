@@ -59,6 +59,7 @@ const ChoicesContainer = styled.div`
   background-color: lightgray;
   border-radius: 0 0 1rem 1rem;
   overflow: hidden;
+  box-shadow: 0 0.8rem 2rem 0 rgba(0,0,0,0.2);
 `;
 
 export const SelectButton = styled.button<{
@@ -137,7 +138,7 @@ export const SelectButton = styled.button<{
       background-color: ${backgroundColor};
       color: ${color};
       transition-duration: 1000ms;
-      font-size: ${chosen ? 1.2 : 0.8}rem;
+      font-size: ${correct ? 1.2 : 0.8}rem;
       box-shadow: ${boxShadow};
       `;
     }
