@@ -25,7 +25,7 @@ const TriviaStat = ({trial, fail, success}: TriviaStatProps) => {
               <span>
               {success > 0 ? `${(success / trial * 100).toFixed(2)}%` : "기록이 없습니다."}
               </span>
-              <span style={{fontSize: "0.5rem", marginLeft: "0.5rem"}}>
+              <span style={{marginLeft: "0.5rem"}}>
                ({success}개)
               </span>
             </StatHoverText>
@@ -49,7 +49,7 @@ const TriviaStat = ({trial, fail, success}: TriviaStatProps) => {
               <span>
               {fail > 0 ? `${(fail / trial * 100).toFixed(2)}%` : "기록이 없습니다."}
               </span>
-              <span style={{fontSize: "0.5rem", marginLeft: "0.5rem"}}>
+              <span style={{marginLeft: "0.5rem"}}>
                ({fail}개)
               </span>
             </StatHoverText>
@@ -104,7 +104,7 @@ const StatHoverText = styled.div`
   font-family: ${Fonts.어그로체B};
   text-shadow: 1px 2px 5px black;
   color: white;
-  font-size: 0.7rem;
+  font-size: 0.8rem;
 `;
 
 type TriviaStatProps = TriviaFileSystem.TriviaScore
