@@ -17,14 +17,19 @@ const Home = () => {
   }, [])
 
   return (
-    <Container>
-      <ContentContainer>
-        <TriviaSummary />
-        {categories.data !== null && (
-          <CategoryList items={categories.data} />
-        )}
-      </ContentContainer>
-    </Container>
+    <>
+      <title>
+        타이틀
+      </title>
+      <Container>
+        <ContentContainer>
+          <TriviaSummary />
+          {categories.data !== null && (
+            <CategoryList items={categories.data} />
+          )}
+        </ContentContainer>
+      </Container>
+    </>
   )
 }
 

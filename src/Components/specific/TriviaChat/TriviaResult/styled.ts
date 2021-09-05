@@ -60,16 +60,15 @@ export const ScoreContainer = styled(Flex)`
 flex: 1;
 justify-content: center;
 align-items: center;
-margin-top: 0.5rem;
+margin-top: 1.5rem;
+margin-bottom: 1rem;
 `;
 
 export const Underline = styled.div`
-width: calc(100%);
+width: 100%;
 left: 0;
 height: 0.3rem;
 background-color: red;
-position: absolute;
-bottom: 0.2rem;
 `;
 
 export const Button = styled(Flex) <{

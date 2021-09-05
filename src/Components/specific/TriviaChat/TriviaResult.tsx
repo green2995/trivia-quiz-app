@@ -48,10 +48,12 @@ const TriviaResult = (props: TriviaResultProps) => {
         </Col>
         <Col sm={6}>
           <ScoreContainer>
-            <div>
-              <Underline />
-              <Score>점수: {(score.success / score.trial * 100).toFixed(0)}점</Score>
-            </div>
+            <Flex style={{alignItems: "center"}}>
+              <Flex>
+                <Score>점수: {(score.success / score.trial * 100).toFixed(0)}점</Score>
+                <Underline/>
+              </Flex>
+            </Flex>
           </ScoreContainer>
         </Col>
       </Row>
