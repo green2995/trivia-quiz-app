@@ -25,7 +25,6 @@ const SENDER_USER = {
 
 function* loadQuestions({ payload: categorId }: Actions["loadQuestions"]) {
   const state: TriviaChatState = yield select();
-
   if (state.questions.data) return;
 
   yield put(slice.actions.setQuestions({
@@ -297,7 +296,7 @@ function* retry() {
   const state: TriviaChatState = yield select();
   const prevScore = state.score.success / state.score.trial;
   yield put(slice.actions.resetPlay());
-  yield put(slice.actions.appendRecord({
+  yield put(slice.actions.setRecords([{
     sender: SENDER_SYSTEM,
     message: {
       type: "text",
@@ -305,25 +304,24 @@ function* retry() {
         ? "유후~ 이번엔 다 맞출 수 있겠죠?"
         : "오우 다 맞췄는데 또 하다니, 대단쓰",
     }
-  }));
+  }]));
   yield put(slice.actions.setInteractive("start"))
 }
 
 function* nextSet() {
   yield put(slice.actions.initialize());
-  yield put(slice.actions.appendRecord({
+  yield put(slice.actions.setRecords([{
     sender: SENDER_SYSTEM,
     message: {
       type: "text",
       value: "오~ 학구열이 대단하군요?! 좋아요 좋습니다",
     }
-  }))
-
-  yield put(slice.actions.loadQuestions());
+  }]))
 }
 
 
 function* resetPlay() {
+  yield put(slice.actions.setResultVisible(false));
   yield put(slice.actions.setInteractive("none")); 
   yield put(slice.actions.setTime({
     start: 0,
@@ -348,7 +346,6 @@ function* initialize() {
     error: false,
     loading: false,
   }))
-  yield put(slice.actions.setRecords([]));
 }
 
 export function* triviaChatSaga() {

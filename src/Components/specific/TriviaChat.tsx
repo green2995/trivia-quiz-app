@@ -9,18 +9,19 @@ import { useTriviaChatStore } from './TriviaChat/useTriviaChatStore';
 import { TriviaChatSlice, TriviaChatState } from './TriviaChat/slice';
 import QuizChat from './TriviaChat/QuizChat';
 import { useHistory } from 'react-router';
+import { TriviaFileSystem } from '../../System';
 
 const TriviaChat = (props: TriviaChatProps) => {
   const store = useTriviaChatStore();
 
   return (
     <Provider store={store}>
-      <Provided />
+      <Provided {...props} />
     </Provider>
   )
 }
 
-const Provided = () => {
+const Provided = (props: TriviaChatProps) => {
   const history = useHistory();
   const state = useSelector((s: TriviaChatState) => s)
   const dispatch = useDispatch();
@@ -53,13 +54,13 @@ const Provided = () => {
   function onClickNextSet() {
     dispatch(TriviaChatSlice.actions.setInteractiveVisibility(true));
     dispatch(TriviaChatSlice.actions.nextSet());
+    dispatch(TriviaChatSlice.actions.loadQuestions(props.category.id));
   }
   
   React.useEffect(() => {
     if (!state.questions.data) {
-      dispatch(TriviaChatSlice.actions.loadQuestions());
+      dispatch(TriviaChatSlice.actions.loadQuestions(props.category.id));
     }
-
   }, [])
 
   return (

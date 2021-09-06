@@ -1,12 +1,10 @@
 import React from 'react'
-import { useDispatch, useSelector } from 'react-redux';
-import { useHistory } from 'react-router';
 import styled from 'styled-components';
 import { Trivia } from '../../../Interfaces/TriviaQuestion';
 import Chat from '../../derivative/Chat';
 import { ChatInteractiveProps } from '../../derivative/Chat/ChatInteractive';
 import { ChatRecordProps } from '../../derivative/Chat/ChatRecord';
-import { TriviaChatSlice, TriviaChatState } from './slice';
+import { TriviaChatState } from './slice';
 
 export const USER_NICK = "user";
 export const SYSTEM_NICK = "스템이";

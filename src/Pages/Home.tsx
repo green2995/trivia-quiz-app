@@ -11,7 +11,7 @@ const Home = () => {
   const categories = useSelector((state: RootState) => state.trivia.categories);
 
   React.useEffect(() => {
-    if (categories.data === null) {
+    if (!categories.data) {
       dispatch(categoriesSlice.actions.loadCategories());
     }
   }, [])

@@ -8,6 +8,7 @@ const initialState = {
   records: [] as ChatRecordProps[],
   interactive: "none" as "none" | "start" | "next" | "select",
   resultVisible: false,
+  randomCategory: false,
   
   questions: AsyncData.getInitialState<Trivia[]>(),
   currentQuestion: {
@@ -43,8 +44,14 @@ const slice = createSlice({
   name: "TriviaChat",
   initialState,
   reducers: {
+    setState(state, action: PayloadAction<TriviaChatState>) {
+      state = action.payload;
+    },
     setRecords: (state, action: PayloadAction<TriviaChatState["records"]>) => {
       state.records = action.payload;
+    },
+    setRandomCategory(state, action: PayloadAction<boolean>) {
+      state.randomCategory = action.payload;
     },
     setQuestions: (state, action: PayloadAction<TriviaChatState["questions"]>) => {
       state.questions = action.payload;
