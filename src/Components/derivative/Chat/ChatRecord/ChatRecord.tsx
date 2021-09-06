@@ -1,7 +1,7 @@
 import React from 'react'
 import styled from 'styled-components';
-import { Flex } from '../../../Styled/Generic';
-import TriviaResult, { TriviaResultProps } from '../../specific/TriviaChat/TriviaResult';
+import { Flex } from '../../../../Styled/Generic';
+import TriviaResult, { TriviaResultProps } from './TriviaResult/TriviaResult';
 
 const ChatRecord = (props: ChatRecordProps) => {
   const { sender, message, mine } = props;

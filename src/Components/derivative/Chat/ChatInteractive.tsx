@@ -2,7 +2,7 @@ import React from 'react'
 import styled from 'styled-components';
 import { Fonts } from '../../../Constants';
 import { Flex } from '../../../Styled/Generic';
-import SelectMessage, { SelectMessageProps } from './SelectMessage';
+import SelectMessage, { SelectMessageProps } from './SelectMessage/SelectMessage';
 
 const ChatInteractive = (props: ChatInteractiveProps) => {
   const { message } = props;

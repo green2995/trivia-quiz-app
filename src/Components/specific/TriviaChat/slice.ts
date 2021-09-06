@@ -2,7 +2,7 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { TriviaCategory } from "../../../Interfaces/Category";
 import { Trivia } from "../../../Interfaces/TriviaQuestion";
 import AsyncData from "../../../Utils/redux/AsyncData";
-import { ChatRecordProps } from "../../derivative/Chat/ChatRecord";
+import { ChatRecordProps } from "../../derivative/Chat/ChatRecord/ChatRecord";
 
 const initialState = {
   records: [] as ChatRecordProps[],

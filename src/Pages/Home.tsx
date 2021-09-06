@@ -31,6 +31,7 @@ const Home = () => {
 const Container = styled.main`
   &::before {
     background: url("https://i.ibb.co/Df4HGyN/pattern.png");
+    filter: blur(1rem);
     position: fixed;
     top: 0;
     bottom: 0;

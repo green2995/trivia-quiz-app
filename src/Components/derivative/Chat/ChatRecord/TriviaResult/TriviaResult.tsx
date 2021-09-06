@@ -1,8 +1,8 @@
 import React from 'react'
-import { Flex } from '../../../Styled/Generic';
-import { Col, Row } from '../../../Styled/Grid';
-import { TriviaChatState } from './slice';
-import TriviaChatTestIds from './testid';
+import { Flex } from '../../../../../Styled/Generic';
+import { Col, Row } from '../../../../../Styled/Grid';
+import { TriviaChatState } from '../../../../specific/TriviaChat/slice';
+import TriviaChatTestIds from '../../../../specific/TriviaChat/testid';
 import {
   Button,
   Container,
@@ -13,7 +13,7 @@ import {
   ScoreContainer,
   Title,
   Underline,
-} from "./TriviaResult/styled";
+} from "./styled";
 
 const TriviaResult = (props: TriviaResultProps) => {
   const {

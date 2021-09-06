@@ -41,6 +41,7 @@ const Container = styled.div`
   &::before {
     background: url("https://i.ibb.co/Df4HGyN/pattern.png");
     position: fixed;
+    filter: blur(0.5rem);
     top: 0;
     bottom: 0;
     left: 0;
@@ -49,7 +50,6 @@ const Container = styled.div`
     z-index: -1;
   }
   flex: 1;
-  background-color: rgba(255,255,255,0.5);
   overflow: hidden;
   display: flex;
   flex-direction: column;

@@ -1,6 +1,6 @@
 import React from 'react'
-import TriviaChatTestIds from '../../specific/TriviaChat/testid';
-import { SelectButton, SelectButtonContainer } from "./SelectMessage/styled"
+import TriviaChatTestIds from '../../../specific/TriviaChat/testid';
+import { SelectButton, SelectButtonContainer } from "./styled"
 
 const SelectMessage = (props: SelectMessageProps) => {
   const { choices, onSelect, correct } = props;

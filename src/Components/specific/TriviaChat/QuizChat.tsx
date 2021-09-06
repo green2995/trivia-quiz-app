@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import { Trivia } from '../../../Interfaces/TriviaQuestion';
 import Chat from '../../derivative/Chat';
 import { ChatInteractiveProps } from '../../derivative/Chat/ChatInteractive';
-import { ChatRecordProps } from '../../derivative/Chat/ChatRecord';
+import { ChatRecordProps } from '../../derivative/Chat/ChatRecord/ChatRecord';
 import { TriviaChatState } from './slice';
 import TriviaChatTestIds from './testid';
 

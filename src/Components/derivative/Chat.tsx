@@ -2,7 +2,7 @@ import React from 'react'
 import styled from 'styled-components'
 import { a, config, useTransition, useSpring } from 'react-spring'
 import { getAbsoluteOffset } from '../../Utils/layout/getAbsoluteOffset';
-import ChatRecord, { ChatRecordProps } from './Chat/ChatRecord'
+import ChatRecord, { ChatRecordProps } from './Chat/ChatRecord/ChatRecord'
 import ChatInteractive, { ChatInteractiveProps } from './Chat/ChatInteractive';
 import { Flex } from '../../Styled/Generic';
 
@@ -44,7 +44,7 @@ const Chat = (props: ChatProps) => {
       });
     }
 
-    // scrollToBottom("smooth");
+    scrollToBottom("smooth");
   }, [props.records, props.interactive, props.interactiveVisible])
 
   return (

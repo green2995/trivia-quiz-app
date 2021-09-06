@@ -1,7 +1,7 @@
 import styled from "styled-components";
-import { Fonts } from "../../../../Constants";
-import { Flex } from "../../../../Styled/Generic";
-import { Row } from "../../../../Styled/Grid";
+import { Fonts } from "../../../../../Constants";
+import { Flex } from "../../../../../Styled/Generic";
+import { Row } from "../../../../../Styled/Grid";
 
 export const Container = styled.div`
 background-color: white;
