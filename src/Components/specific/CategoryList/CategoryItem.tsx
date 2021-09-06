@@ -10,10 +10,11 @@ const CategoryItem = (props: CategoryItemProps) => {
   return (
     <Container>
       <Link
+        data-testid={`category-item-${props.name.toLowerCase().replace(/\s/g, "")}`}
         to={{
           pathname: "/trivia",
           search: `?category=${props.name}`,
-        }} >
+        }}>
         <Content>
           <ThumbnailContainer>
             {props.id === -1

@@ -122,4 +122,9 @@ export type SpecialMessages = {
   }
 }
 
-export default ChatRecord
+export default React.memo(ChatRecord, (prev, next) => {
+  if (prev.sender.name !== next.sender.name || prev.sender.imgUrl !== next.sender.imgUrl) return false;
+  if (prev.message !== next.message) return false;
+  if (prev.mine !== next.mine) return false;
+  return true;
+});

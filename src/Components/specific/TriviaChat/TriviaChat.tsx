@@ -1,15 +1,15 @@
 import React from 'react'
-import Chat from '../derivative/Chat';
-import { TriviaCategory } from '../../Interfaces/Category';
+import Chat from '../../derivative/Chat';
+import { TriviaCategory } from '../../../Interfaces/Category';
 import styled from 'styled-components';
-import { Fonts } from '../../Constants';
-import { AbsoluteFill } from '../../Styled/Generic';
+import { Fonts } from '../../../Constants';
+import { AbsoluteFill } from '../../../Styled/Generic';
 import { Provider, useDispatch, useSelector } from 'react-redux';
-import { useTriviaChatStore } from './TriviaChat/useTriviaChatStore';
-import { TriviaChatSlice, TriviaChatState } from './TriviaChat/slice';
-import QuizChat from './TriviaChat/QuizChat';
+import { useTriviaChatStore } from './useTriviaChatStore';
+import { TriviaChatSlice, TriviaChatState } from './slice';
+import QuizChat from './QuizChat';
 import { useHistory } from 'react-router';
-import { TriviaFileSystem } from '../../System';
+import { TriviaFileSystem } from '../../../System';
 
 const TriviaChat = (props: TriviaChatProps) => {
   const store = useTriviaChatStore();

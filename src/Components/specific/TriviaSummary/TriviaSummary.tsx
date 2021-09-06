@@ -1,11 +1,11 @@
 import React from 'react'
 import styled from 'styled-components';
-import { Fonts } from '../../Constants';
-import { AbsoluteFill, Flex } from '../../Styled/Generic';
-import { TriviaFileSystem } from '../../System';
+import { Fonts } from '../../../Constants';
+import { AbsoluteFill, Flex } from '../../../Styled/Generic';
+import { TriviaFileSystem } from '../../../System';
 import TinyTrivia from './TinyTrivia';
-import { TriviaSummarySlice } from './TriviaSummary/slice';
-import TriviaStat from './TriviaSummary/TriviaStat';
+import { TriviaSummarySlice } from './slice';
+import TriviaStat from './TriviaStat';
 
 const TriviaSummray = () => {
   const [state, dispatch] = React.useReducer(TriviaSummarySlice.reducer, TriviaSummarySlice.initialState);
@@ -61,7 +61,7 @@ const TriviaSummray = () => {
   }
 
   return (
-    <Container>
+    <Container data-testid={"trivia-summary"}>
       <SubTitle>정답률 및 오답률</SubTitle>
       <TriviaStat {...state.triviaScore} />
       {(state.currentFailed.trivia) && (

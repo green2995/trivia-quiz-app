@@ -28,8 +28,8 @@ const Chat = (props: ChatProps) => {
   })
 
   function scrollToBottom(behavior: "auto" | "smooth" = "auto") {
-    if (!containerRef.current) return;
-    recordContainerRef.current?.scrollTo({
+    if (!recordContainerRef.current) return;
+    recordContainerRef.current.scrollTo({
       top: recordContainerRef.current.scrollHeight,
       behavior,
     })
@@ -44,7 +44,7 @@ const Chat = (props: ChatProps) => {
       });
     }
 
-    scrollToBottom("smooth");
+    // scrollToBottom("smooth");
   }, [props.records, props.interactive, props.interactiveVisible])
 
   return (

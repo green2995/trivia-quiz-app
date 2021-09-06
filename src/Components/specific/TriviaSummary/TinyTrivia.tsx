@@ -2,9 +2,9 @@ import React from 'react'
 import _ from 'lodash'
 import { a, useSpring } from '@react-spring/web';
 import styled from 'styled-components';
-import { Fonts } from '../../Constants';
-import { Trivia } from '../../Interfaces/TriviaQuestion'
-import { Flex } from '../../Styled/Generic';
+import { Fonts } from '../../../Constants';
+import { Trivia } from '../../../Interfaces/TriviaQuestion'
+import { Flex } from '../../../Styled/Generic';
 
 const TinyTrivia = (props: TinyTriviaProps) => {
 

@@ -1,7 +1,7 @@
 import React from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 import styled from 'styled-components';
-import { RootState } from '..';
+import { RootState } from '../store';
 import CategoryList from '../Components/specific/CategoryList';
 import TriviaSummary from '../Components/specific/TriviaSummary';
 import { categoriesSlice } from '../Store/trivia/categories/slice';
@@ -17,19 +17,14 @@ const Home = () => {
   }, [])
 
   return (
-    <>
-      <title>
-        타이틀
-      </title>
-      <Container>
-        <ContentContainer>
-          <TriviaSummary />
-          {categories.data !== undefined && (
-            <CategoryList items={categories.data} />
-          )}
-        </ContentContainer>
-      </Container>
-    </>
+    <Container>
+      <ContentContainer>
+        <TriviaSummary />
+        {categories.data !== undefined && (
+          <CategoryList items={categories.data} />
+        )}
+      </ContentContainer>
+    </Container>
   )
 }
 

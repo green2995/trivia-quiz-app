@@ -2,7 +2,7 @@ import React from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 import { useLocation } from 'react-router';
 import styled from 'styled-components';
-import { RootState } from '..';
+import { RootState } from '../store';
 import TriviaChat from '../Components/specific/TriviaChat';
 import { categoriesSlice } from '../Store/trivia/categories/slice';
 
@@ -28,7 +28,7 @@ const Trivia = () => {
   }, [])
 
   return (
-    <Container>
+    <Container data-testid={"trivia-page-container"}>
       {matching !== undefined && (
         // <TriviaChat category={matching} />
         <TriviaChat category={matching} />

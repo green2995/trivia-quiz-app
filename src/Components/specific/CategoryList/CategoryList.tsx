@@ -1,8 +1,8 @@
 import React from "react";
 import styled from "styled-components";
-import { TriviaCategory } from "../../Interfaces/Category";
-import { Col, Row } from "../../Styled/Grid";
-import CategoryItem from "./CategoryList/CategoryItem";
+import { TriviaCategory } from "../../../Interfaces/Category";
+import { Col, Row } from "../../../Styled/Grid";
+import CategoryItem from "./CategoryItem";
 
 const CategoryList = (props: CategoryListProps) => {
   if (!props.items.length) return (
