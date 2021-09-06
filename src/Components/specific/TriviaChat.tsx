@@ -1,31 +1,84 @@
 import React from 'react'
 import Chat from '../derivative/Chat';
-import { USER_NICK, useTriviaChat } from './TriviaChat/useTriviaChat';
-import EventHandler from './TriviaChat/EventHandler';
 import { TriviaCategory } from '../../Interfaces/Category';
 import styled from 'styled-components';
 import { Fonts } from '../../Constants';
 import { AbsoluteFill } from '../../Styled/Generic';
+import { Provider, useDispatch, useSelector } from 'react-redux';
+import { useTriviaChatStore } from './TriviaChat/useTriviaChatStore';
+import { TriviaChatSlice, TriviaChatState } from './TriviaChat/slice';
+import QuizChat from './TriviaChat/QuizChat';
+import { useHistory } from 'react-router';
 
 const TriviaChat = (props: TriviaChatProps) => {
-  const [state, event, dispatch, sync] = useTriviaChat();
+  const store = useTriviaChatStore();
+
+  return (
+    <Provider store={store}>
+      <Provided />
+    </Provider>
+  )
+}
+
+const Provided = () => {
+  const history = useHistory();
+  const state = useSelector((s: TriviaChatState) => s)
+  const dispatch = useDispatch();
+
+  function onClickQuizStart() {
+    dispatch(TriviaChatSlice.actions.startQuiz());
+  }
+
+  function onClickNextQuestion() {
+    dispatch(TriviaChatSlice.actions.setInteractive("none"));
+    dispatch(TriviaChatSlice.actions.retrieveQuestions());
+  }
+  
+  function onClickChoice(choice: string) {
+    dispatch(TriviaChatSlice.actions.submitAnswer({
+      answer: choice,
+      questionIndex: state.currentQuestion.index
+    }));
+  }
+
+  function onClickRetry() {
+    dispatch(TriviaChatSlice.actions.setInteractiveVisibility(true));
+    dispatch(TriviaChatSlice.actions.retry());
+  }
+
+  function onClickQuit() {
+    history.push("/");
+  }
+
+  function onClickNextSet() {
+    dispatch(TriviaChatSlice.actions.setInteractiveVisibility(true));
+    dispatch(TriviaChatSlice.actions.nextSet());
+  }
+  
+  React.useEffect(() => {
+    if (!state.questions.data) {
+      dispatch(TriviaChatSlice.actions.loadQuestions());
+    }
+
+  }, [])
 
   return (
     <Conatiner>
-      {/* <Title>{props.category.name}</Title> */}
-      <ChatContainer>
-        <Chat
-          currentUser={USER_NICK}
-          interactive={state.interactive}
-          records={state.records}
-          interactiveVisible={state.interactiveVisible}
-        />
-      </ChatContainer>
-      <EventHandler
-        event={event}
-        dispatch={dispatch}
-        sync={sync}
-        category={props.category}
+      <QuizChat
+        onClickQuizStart={onClickQuizStart}
+        onClickNextQuestion={onClickNextQuestion}
+        onClickChoice={onClickChoice}
+        onClickRetry={onClickRetry}
+        onClickQuit={onClickQuit}
+        onClickNextSet={onClickNextSet}
+        currentQuestion={state.currentQuestion}
+        interactive={state.interactive}
+        records={state.records}
+        score={state.score}
+        time={state.time}
+        interactiveVisible={state.interactiveVisible}
+        questions={state.questions.data}
+        resultVisible={state.resultVisible}
       />
     </Conatiner>
   )
@@ -38,13 +91,8 @@ const Conatiner = styled(AbsoluteFill)`
   background-color: rgba(255,255,255,0.5);
 `;
 
-const ChatContainer = styled.div`
-  width: 100%;
-  height: 100%;
-`;
-
 type TriviaChatProps = {
-  category: Omit<TriviaCategory, "id"> & {id?: number}
+  category: Omit<TriviaCategory, "id"> & { id?: number }
 }
 
 export default TriviaChat

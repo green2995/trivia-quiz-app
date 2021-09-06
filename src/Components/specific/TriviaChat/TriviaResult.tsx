@@ -1,7 +1,7 @@
 import React from 'react'
 import { Flex } from '../../../Styled/Generic';
 import { Col, Row } from '../../../Styled/Grid';
-import { TriviaChatInitialState } from './slice';
+import { TriviaChatState } from './slice';
 import {
   Button,
   Container,
@@ -81,7 +81,7 @@ const TriviaResult = (props: TriviaResultProps) => {
 }
 
 export type TriviaResultProps = {
-  score: TriviaChatInitialState["score"],
+  score: TriviaChatState["score"],
   timetook: number,
   onPressRetry: () => void,
   onPressQuit: () => void

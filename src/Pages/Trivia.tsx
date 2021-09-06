@@ -30,6 +30,7 @@ const Trivia = () => {
   return (
     <Container>
       {matching !== undefined && (
+        // <TriviaChat category={matching} />
         <TriviaChat category={matching} />
       )}
     </Container>

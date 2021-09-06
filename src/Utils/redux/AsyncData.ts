@@ -2,7 +2,7 @@ function getInitialState<T>() {
   return {
     loading: false,
     error: false,
-    data: null as T | null
+    data: undefined as T | undefined
   }
 }
 

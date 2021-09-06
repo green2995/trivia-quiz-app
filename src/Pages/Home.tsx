@@ -24,7 +24,7 @@ const Home = () => {
       <Container>
         <ContentContainer>
           <TriviaSummary />
-          {categories.data !== null && (
+          {categories.data !== undefined && (
             <CategoryList items={categories.data} />
           )}
         </ContentContainer>

@@ -1,12 +1,13 @@
-import { createReducer, createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { TriviaCategory } from "../../../Interfaces/Category";
 import { Trivia } from "../../../Interfaces/TriviaQuestion";
 import AsyncData from "../../../Utils/redux/AsyncData";
-import { ChatInteractiveProps } from "../../derivative/Chat/ChatInteractive";
 import { ChatRecordProps } from "../../derivative/Chat/ChatRecord";
 
 const initialState = {
   records: [] as ChatRecordProps[],
-  interactive: undefined as undefined | ChatInteractiveProps,
+  interactive: "none" as "none" | "start" | "next" | "select",
+  resultVisible: false,
   
   questions: AsyncData.getInitialState<Trivia[]>(),
   currentQuestion: {
@@ -15,43 +16,88 @@ const initialState = {
     answers: [] as string[],
   },
 
-  timetook: -1,
   score: {
-    trial: -1,
-    success: -1,
-    fail: -1,
+    trial: 0,
+    success: 0,
+    fail: 0,
   },
 
   interactiveVisible: true,
+
+  category: {
+    id: -1,
+    name: "",
+  },
+
+  time: {
+    start: -1,
+    end: -1,
+  },
+
+  waitingResponse: false,
 }
 
-export type TriviaChatInitialState = typeof initialState;
+export type TriviaChatState = typeof initialState;
 
 const slice = createSlice({
   name: "TriviaChat",
   initialState,
   reducers: {
-    setRecords: (state, action: PayloadAction<TriviaChatInitialState["records"]>) => {
+    setRecords: (state, action: PayloadAction<TriviaChatState["records"]>) => {
       state.records = action.payload;
     },
-    setQuestions: (state, action: PayloadAction<TriviaChatInitialState["questions"]>) => {
+    setQuestions: (state, action: PayloadAction<TriviaChatState["questions"]>) => {
       state.questions = action.payload;
     },
-    setCurrentQuestion: (state, action: PayloadAction<TriviaChatInitialState["currentQuestion"]>) => {
+    setCurrentQuestion: (state, action: PayloadAction<TriviaChatState["currentQuestion"]>) => {
       state.currentQuestion = action.payload;
     },
-    setTimetook: (state, action: PayloadAction<TriviaChatInitialState["timetook"]>) => {
-      state.timetook = action.payload;
-    },
-    setInteractive: (state, action: PayloadAction<TriviaChatInitialState["interactive"]>) => {
+    setInteractive: (state, action: PayloadAction<TriviaChatState["interactive"]>) => {
       state.interactive = action.payload;
     },
-    setInteractiveVisibility: (state, action: PayloadAction<TriviaChatInitialState["interactiveVisible"]>) => {
+    setInteractiveVisibility: (state, action: PayloadAction<TriviaChatState["interactiveVisible"]>) => {
       state.interactiveVisible = action.payload;
     },
-    setScore: (state, action: PayloadAction<TriviaChatInitialState["score"]>) => {
+    setScore: (state, action: PayloadAction<TriviaChatState["score"]>) => {
       state.score = action.payload;
     },
+    setCategory(state, action: PayloadAction<TriviaChatState["category"]>) {
+      state.category = action.payload;
+    },
+    setTime(state, action: PayloadAction<TriviaChatState["time"]>) {
+      state.time = action.payload;
+    },
+    setWaitingResponse(state, action: PayloadAction<TriviaChatState["waitingResponse"]>) {
+      state.waitingResponse = action.payload;
+    },
+    setResultVisible(state, action: PayloadAction<boolean>) {
+      state.resultVisible = action.payload;
+    },
+
+    appendRecord(state, action: PayloadAction<ChatRecordProps>) {
+      state.records.push(action.payload);
+    },
+
+    loadQuestions(state, action: PayloadAction<number | undefined>) {},
+    loadQuestions_success(state, action: PayloadAction<Trivia[]>) {},
+    loadQuestions_fail(state) {},
+
+    startQuiz() {},
+
+    retrieveQuestions() {},
+
+    submitAnswer(state, action: PayloadAction<{questionIndex: number, answer: string}>) {},
+    answer_correct(){},
+    answer_incorrect(){},
+
+    nextQuestion(){},
+    completeQuiz(){},
+
+    retry(){},
+    nextSet(){},
+
+    resetPlay(){},
+    initialize(){},
   }
 })
 
