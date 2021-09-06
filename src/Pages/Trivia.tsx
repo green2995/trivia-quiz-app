@@ -50,6 +50,7 @@ const Container = styled.div`
     z-index: -1;
   }
   flex: 1;
+  background-color: rgba(255,255,255,0.5);
   overflow: hidden;
   display: flex;
   flex-direction: column;
