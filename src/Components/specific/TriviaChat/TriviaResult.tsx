@@ -2,6 +2,7 @@ import React from 'react'
 import { Flex } from '../../../Styled/Generic';
 import { Col, Row } from '../../../Styled/Grid';
 import { TriviaChatState } from './slice';
+import TriviaChatTestIds from './testid';
 import {
   Button,
   Container,
@@ -48,30 +49,41 @@ const TriviaResult = (props: TriviaResultProps) => {
         </Col>
         <Col sm={6}>
           <ScoreContainer>
-            <Flex style={{alignItems: "center"}}>
+            <Flex style={{ alignItems: "center" }}>
               <Flex>
-                <Score>점수: {(score.success / score.trial * 100).toFixed(0)}점</Score>
-                <Underline/>
+                <Score data-testid={TriviaChatTestIds.scoreText}>점수: {(score.success / score.trial * 100).toFixed(0)}점</Score>
+                <Underline />
               </Flex>
             </Flex>
           </ScoreContainer>
         </Col>
       </Row>
-      <Row style={{marginTop: "1rem"}}>
+      <Row style={{ marginTop: "1rem" }}>
         <Col>
-          <Button onClick={onPressNext} type={"next"}>
+          <Button
+            data-testid={TriviaChatTestIds.nextSetButton}
+            onClick={onPressNext}
+            type={"next"}>
             다음문제
           </Button>
         </Col>
       </Row>
-      <Row style={{marginTop: "0.6rem"}}>
+      <Row style={{ marginTop: "0.6rem" }}>
         <Col sm={6}>
-          <Button onClick={onPressRetry} type={"retry"} direction={"left"}>
+          <Button
+            data-testid={TriviaChatTestIds.retryButton}
+            onClick={onPressRetry}
+            type={"retry"}
+            direction={"left"}>
             다시풀기
           </Button>
         </Col>
         <Col sm={6}>
-          <Button onClick={onPressQuit} type={"quit"} direction={"right"}>
+          <Button
+            data-testid={TriviaChatTestIds.quitButton}
+            onClick={onPressQuit}
+            type={"quit"}
+            direction={"right"}>
             그만풀기
           </Button>
         </Col>

@@ -5,6 +5,7 @@ import Chat from '../../derivative/Chat';
 import { ChatInteractiveProps } from '../../derivative/Chat/ChatInteractive';
 import { ChatRecordProps } from '../../derivative/Chat/ChatRecord';
 import { TriviaChatState } from './slice';
+import TriviaChatTestIds from './testid';
 
 export const USER_NICK = "user";
 export const SYSTEM_NICK = "스템이";
@@ -16,15 +17,16 @@ const SENDER_SYSTEM = {
 
 
 const QuizChat = (props: QuizChatProps) => {
-  const interactiveProps = (() => {
+  const interactiveProps: ChatInteractiveProps | undefined = (() => {
     if (props.interactive === "start") {
       return {
         message: {
           type: "button",
           value: "퀴즈 시작",
-          onClick: props.onClickQuizStart
-        }
-      }
+          onClick: props.onClickQuizStart,
+        },
+        testid: TriviaChatTestIds.startButton
+      } as ChatInteractiveProps
     }
 
     if (props.interactive === "next") {
@@ -33,12 +35,13 @@ const QuizChat = (props: QuizChatProps) => {
           type: "button",
           onClick: props.onClickNextQuestion,
           value: "다음 문제"
-        }
-      }
+        },
+        testid: TriviaChatTestIds.nextButton
+      } as ChatInteractiveProps
     }
 
     if (props.interactive === "select") {
-      return   {
+      return {
         message: {
           type: "selection",
           value: {
@@ -46,31 +49,38 @@ const QuizChat = (props: QuizChatProps) => {
             onSelect: props.onClickChoice,
             correct: props.questions![props.currentQuestion.index].correct_answer
           }
-        }
-      }    
+        },
+        testid: TriviaChatTestIds.choiceContainer,
+      } as ChatInteractiveProps
     }
 
     return undefined;
-  })() as ChatInteractiveProps | undefined
+  })();
+
+  const resultRecordProps = {
+    sender: SENDER_SYSTEM,
+    message: {
+      type: "triviaResult",
+      value: {
+        score: props.score,
+        timetook: props.time.end - props.time.start,
+        onPressRetry: props.onClickRetry,
+        onPressQuit: props.onClickQuit,
+        onPressNext: props.onClickNextSet,
+      }
+    },
+    testid: TriviaChatTestIds.resultContainer,
+  } as ChatRecordProps
 
   return (
     <ChatContainer>
       <Chat
         currentUser={USER_NICK}
         interactive={interactiveProps}
-        records={props.resultVisible ? [...props.records, {
-          sender: SENDER_SYSTEM,
-          message: {
-            type: "triviaResult",
-            value: {
-              score: props.score,
-              timetook: props.time.end - props.time.start,
-              onPressRetry: props.onClickRetry,
-              onPressQuit: props.onClickQuit,
-              onPressNext: props.onClickNextSet,
-            }
-          }      
-        }] : props.records}
+        records={props.resultVisible
+          ? [...props.records, resultRecordProps]
+          : props.records
+        }
         interactiveVisible={props.interactiveVisible}
       />
     </ChatContainer>

@@ -1,5 +1,6 @@
 import React from 'react'
-import {SelectButton, SelectButtonContainer} from "./SelectMessage/styled"
+import TriviaChatTestIds from '../../specific/TriviaChat/testid';
+import { SelectButton, SelectButtonContainer } from "./SelectMessage/styled"
 
 const SelectMessage = (props: SelectMessageProps) => {
   const { choices, onSelect, correct } = props;
@@ -16,6 +17,10 @@ const SelectMessage = (props: SelectMessageProps) => {
       {choices.map((item, i) => (
         <SelectButton
           key={i}
+          data-testid={item === correct
+            ? TriviaChatTestIds.correctAnswer + `-${i}`
+            : TriviaChatTestIds.falseAnswer + `-${i}`
+          }
           chosen={item === chosen}
           correct={item === correct}
           onClick={onClick.bind(null, item)}

@@ -11,14 +11,14 @@ const ChatInteractive = (props: ChatInteractiveProps) => {
 
   if (message.type === "selection")
     return (
-      <MessageContainer>
+      <MessageContainer data-testid={props.testid}>
         <SelectMessage {...message.value} />
       </MessageContainer>
     )
 
   return (
     <MessageContainer>
-      <MessageButton onClick={message.onClick}>
+      <MessageButton data-testid={props.testid} onClick={message.onClick}>
         {message.value}
       </MessageButton>
     </MessageContainer>
@@ -71,6 +71,7 @@ const MessageButton = styled.button`
 
 export type ChatInteractiveProps = {
   message: ChatMessages[keyof ChatMessages]
+  testid?: string
 }
 
 export type ChatMessages = {

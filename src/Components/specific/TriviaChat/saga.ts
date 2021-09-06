@@ -9,6 +9,7 @@ import AsyncData from "../../../Utils/redux/AsyncData";
 import { SliceAction } from "../../../Utils/redux/type";
 import { SYSTEM_NICK, USER_NICK } from "./QuizChat";
 import { TriviaChatState, TriviaChatSlice as slice } from "./slice"
+import TriviaChatTestIds from "./testid";
 
 type Actions = {
   [K in keyof typeof slice["actions"]]: SliceAction<typeof slice, K>
@@ -36,9 +37,10 @@ function* loadQuestions({ payload: categorId }: Actions["loadQuestions"]) {
   yield put(slice.actions.appendRecord({
     message: {
       type: "text",
-      value: `카테고리 정보를 불러오고 있습니다.`
+      value: `카테고리 정보를 불러오고 있습니다.`,
     },
-    sender: SENDER_SYSTEM
+    sender: SENDER_SYSTEM,
+    testid: TriviaChatTestIds.loadingCategory,
   }));
 
   const categories: TriviaCategory[] = yield call(TriviaAPI.fetchCategories);
@@ -67,7 +69,8 @@ function* loadQuestions({ payload: categorId }: Actions["loadQuestions"]) {
       type: "text",
       value: `[${selectedCategory.name}] 분야의 문제를 불러오고 있습니다`
     },
-    sender: SENDER_SYSTEM
+    sender: SENDER_SYSTEM,
+    testid: TriviaChatTestIds.loadingQuestions,
   }));
 
   try {
@@ -92,6 +95,7 @@ function* loadQuestions_success(action: Actions["loadQuestions_success"]) {
       type: "text",
       value: "유후~ 문제를 모두 불러왔습니다."
     },
+    testid: TriviaChatTestIds.loadedQuestions,
   }));
 
   yield put(slice.actions.setInteractive("start"))
@@ -153,6 +157,7 @@ function* retrieveQuestions() {
       value: `[ ${i + 1}번 문제 ] ${questions[i].question}`,
       tag: "important"
     },
+    testid: `${TriviaChatTestIds.questionRecord}-${i}`,
   }))
 
   yield put(slice.actions.setInteractive("select"))
@@ -210,7 +215,8 @@ function* answer_correct() {
       type: "text",
       value: `${getRandomReaction("correct")} 정답은 ${correct} 입니다!`,
       tag: "positive",
-    }
+    },
+    testid: TriviaChatTestIds.reactionCorrect + `-${state.currentQuestion.index}`,
   }));
 
   yield put(slice.actions.setScore({
@@ -234,7 +240,8 @@ function* answer_incorrect() {
       type: "text",
       value: `${getRandomReaction("incorrect")} 정답은 ${correct} 입니다`,
       tag: "warning",
-    }
+    },
+    testid: TriviaChatTestIds.reactionFalse + `-${state.currentQuestion.index}`,
   }))
 
   yield put(slice.actions.setScore({

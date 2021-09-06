@@ -8,7 +8,7 @@ const ChatRecord = (props: ChatRecordProps) => {
 
   if (message.type === "triviaResult") {
     return (
-      <MessageContainer>
+      <MessageContainer data-testid={props.testid}>
         <TriviaResult {...message.value} />
       </MessageContainer>
     )
@@ -16,7 +16,7 @@ const ChatRecord = (props: ChatRecordProps) => {
 
   if (mine)
     return (
-      <MessageContainer lean={"right"}>
+      <MessageContainer lean={"right"} data-testid={props.testid}>
         <Flex>
           <Message mine tag={message.tag}>
             {message.value}
@@ -26,7 +26,7 @@ const ChatRecord = (props: ChatRecordProps) => {
     )
 
   return (
-    <MessageContainer lean={"left"}>
+    <MessageContainer lean={"left"} data-testid={props.testid}>
       <ProfileImg src={sender.imgUrl} />
       <Flex>
         <ProfileName>{sender.name}</ProfileName>
@@ -103,6 +103,7 @@ export type ChatRecordProps = {
   }
   message: ChatMessages[keyof ChatMessages]
   mine?: boolean
+  testid?: string
 }
 
 export type ChatMessages = {

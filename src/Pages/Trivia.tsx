@@ -5,6 +5,7 @@ import styled from 'styled-components';
 import { RootState } from '../store';
 import TriviaChat from '../Components/specific/TriviaChat';
 import { categoriesSlice } from '../Store/trivia/categories/slice';
+import TriviaPageTestIds from './Trivia/testid';
 
 const Trivia = () => {
   const dispatch = useDispatch();
@@ -28,9 +29,8 @@ const Trivia = () => {
   }, [])
 
   return (
-    <Container data-testid={"trivia-page-container"}>
+    <Container data-testid={TriviaPageTestIds.container}>
       {matching !== undefined && (
-        // <TriviaChat category={matching} />
         <TriviaChat category={matching} />
       )}
     </Container>
