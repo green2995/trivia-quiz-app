@@ -2,9 +2,8 @@
 - [대화형 퀴즈](https://user-images.githubusercontent.com/24871544/132313866-f431560d-46f3-4900-9993-9be752d72780.gif): 각 카테고리별로 대화형으로 퀴즈를 전개합니다.
 - [다시 풀기](https://user-images.githubusercontent.com/24871544/132309978-d629a85b-b275-4054-a436-47d01eeddc61.gif): 퀴즈를 모두 푼 후에, 방금 푼 문제를 다시 풀어볼 수 있습니다.
 - [이어서 풀기](https://user-images.githubusercontent.com/24871544/132309984-b4ba5bff-ff81-4458-bc98-7c93aef72d32.gif): 퀴즈를 모두 푼 후에, 해당 카테고리의 다른 문제 세트를 불러와 이어서 풀 수 있습니다. (Random카테고리의 경우 이어서 풀기 시 매번 다른 카테고리의 문제를 가져옵니다.)
-- [틀린 문제 다시 풀기](https://user-images.githubusercontent.com/24871544/132310438-d95f85a7-9c2b-421a-b0ea-b696e5efa824.gif): localStorage에 저장된 틀린 문제들은 최근에 틀린 문제 순으로 /home에서 한 문제씩 다시 풀어볼 수 있습니다.
-- 풀었던 문제 대비 정오답률: 지금까지 푼 문제들 중 틀린 수와 맞춘 수의 비율을 보여줍니다. /home에서 틀린 문제를 다시 풀 때에는 곧장 변경되는 것을 볼 수 있습니다.
-
+- [틀린 문제 다시 풀기](https://user-images.githubusercontent.com/24871544/132310438-d95f85a7-9c2b-421a-b0ea-b696e5efa824.gif): 최근에 틀린 문제 순으로 다시 풀어볼 수 있습니다.
+- 풀었던 문제 대비 정오답률: 지금까지 푼 문제들 중 틀린 수와 맞춘 수의 비율을 보여줍니다.
 
 
 
