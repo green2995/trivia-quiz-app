@@ -3,13 +3,11 @@ import { createBrowserHistory } from "history"
 import { Router } from "react-router-dom"
 import { render, waitFor, screen, fireEvent } from "@testing-library/react"
 import App from "../../App"
-import { Provider } from "react-redux"
-import { store } from "../../store"
 import TriviaPageTestIds from "../Trivia/testid"
 import TriviaChatTestIds from "../../Components/specific/TriviaChat/testid"
 
 function waitFor5000<T>(callback: () => T) {
-  return waitFor(callback, {timeout: 5000})
+  return waitFor(callback, { timeout: 5000 })
 }
 
 function waitStartButton() {
@@ -36,11 +34,9 @@ describe("Trivia Page", () => {
     history.push("/trivia?category=Random")
 
     render(
-      <Provider store={store}>
-        <Router history={history}>
-          <App />
-        </Router>
-      </Provider>
+      <Router history={history}>
+        <App />
+      </Router>
     )
 
     await waitFor5000(() => {
@@ -62,13 +58,13 @@ describe("Trivia Page", () => {
     fireEvent.click(screen.getByTestId(TriviaChatTestIds.startButton));
 
     const questionRecordMatcher = new RegExp(TriviaChatTestIds.questionRecord);
-    
+
     await waitFor5000(() => {
       expect(screen.queryByTestId(questionRecordMatcher)).toBeInTheDocument();
     })
   })
-  
-  test("can choose an answer among choices", async() => {
+
+  test("can choose an answer among choices", async () => {
     await waitStartButton();
 
     fireEvent.click(screen.getByTestId(TriviaChatTestIds.startButton));
@@ -78,7 +74,7 @@ describe("Trivia Page", () => {
     });
 
     const correctAnswer = screen.queryByTestId(correctAnswerMatcher);
-    
+
     fireEvent.click(correctAnswer!);
 
     await waitFor5000(() => {
@@ -88,7 +84,7 @@ describe("Trivia Page", () => {
     expect(screen.queryByTestId(correctReactionMatcher)?.textContent!.match(/정답은.+입니다\!/)).not.toBeNull();
   })
 
-  test("overall quiz behavior: proceed, scoring, result", async() => {
+  test("overall quiz behavior: proceed, scoring, result", async () => {
     await waitStartButton();
 
     const startButton = screen.queryByTestId(TriviaChatTestIds.startButton);
@@ -130,6 +126,6 @@ describe("Trivia Page", () => {
     });
 
     const scoreText = screen.queryByTestId(scoreTextMatcher)
-    expect(scoreText!.textContent).toBe(`점수: ${Math.floor(QUESTION_SET_SIZE/2) / QUESTION_SET_SIZE * 100}점`);
+    expect(scoreText!.textContent).toBe(`점수: ${Math.floor(QUESTION_SET_SIZE / 2) / QUESTION_SET_SIZE * 100}점`);
   })
 })

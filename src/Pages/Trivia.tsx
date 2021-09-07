@@ -1,21 +1,19 @@
 import React from 'react'
-import { useDispatch, useSelector } from 'react-redux';
 import { useLocation } from 'react-router';
 import styled from 'styled-components';
-import { RootState } from '../store';
-import TriviaChat from '../Components/specific/TriviaChat';
-import { categoriesSlice } from '../Store/trivia/categories/slice';
 import TriviaPageTestIds from './Trivia/testid';
+import TriviaChat from '../Components/specific/TriviaChat';
+import { useGlobal } from '../State/Global/Global';
+import { observer } from 'mobx-react';
 
-const Trivia = () => {
-  const dispatch = useDispatch();
+const Trivia = observer(() => {
+  const global = useGlobal();
   const location = useLocation();
-  const triviaState = useSelector((state: RootState) => state.trivia);
   const search = new URLSearchParams(location.search);
   const category = search.get("category");
   const matching = (() => {
-    if (!triviaState.categories.data) return undefined;
-    const existing = triviaState.categories.data.find((item) => item.name === category);
+    if (!global.categories.data) return undefined;
+    const existing = global.categories.data.find((item) => item.name === category);
     return existing || {
       name: "Random",
       id: undefined,
@@ -23,8 +21,8 @@ const Trivia = () => {
   })();
 
   React.useEffect(() => {
-    if (!triviaState.categories.data) {
-      dispatch(categoriesSlice.actions.loadCategories());
+    if (!global.categories.data) {
+      global.fetchCategories();
     }
   }, [])
 
@@ -35,7 +33,7 @@ const Trivia = () => {
       )}
     </Container>
   )
-}
+})
 
 const Container = styled.div`
   &::before {

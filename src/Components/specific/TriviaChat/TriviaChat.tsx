@@ -1,89 +1,49 @@
 import React from 'react'
-import Chat from '../../derivative/Chat';
+import { observer } from "mobx-react"
 import { TriviaCategory } from '../../../Interfaces/Category';
 import styled from 'styled-components';
-import { Fonts } from '../../../Constants';
 import { AbsoluteFill } from '../../../Styled/Generic';
-import { Provider, useDispatch, useSelector } from 'react-redux';
-import { useTriviaChatStore } from './useTriviaChatStore';
-import { TriviaChatSlice, TriviaChatState } from './slice';
 import QuizChat from './QuizChat';
 import { useHistory } from 'react-router';
-import { TriviaFileSystem } from '../../../System';
+import TriviaChatX from "./TriviaChatX"
+import { useCurrent } from '../../../Hooks/useCurrent';
 
-const TriviaChat = (props: TriviaChatProps) => {
-  const store = useTriviaChatStore();
-
-  return (
-    <Provider store={store}>
-      <Provided {...props} />
-    </Provider>
-  )
-}
-
-const Provided = (props: TriviaChatProps) => {
+const TriviaChat = observer((props: TriviaChatProps) => {
+  const { category } = props;
+  const triviaChatX = useCurrent(new TriviaChatX())
   const history = useHistory();
-  const state = useSelector((s: TriviaChatState) => s)
-  const dispatch = useDispatch();
-
-  function onClickQuizStart() {
-    dispatch(TriviaChatSlice.actions.startQuiz());
-  }
-
-  function onClickNextQuestion() {
-    dispatch(TriviaChatSlice.actions.setInteractive("none"));
-    dispatch(TriviaChatSlice.actions.retrieveQuestions());
-  }
-  
-  function onClickChoice(choice: string) {
-    dispatch(TriviaChatSlice.actions.submitAnswer({
-      answer: choice,
-      questionIndex: state.currentQuestion.index
-    }));
-  }
-
-  function onClickRetry() {
-    dispatch(TriviaChatSlice.actions.setInteractiveVisibility(true));
-    dispatch(TriviaChatSlice.actions.retry());
-  }
 
   function onClickQuit() {
     history.push("/");
   }
 
-  function onClickNextSet() {
-    dispatch(TriviaChatSlice.actions.setInteractiveVisibility(true));
-    dispatch(TriviaChatSlice.actions.nextSet());
-    dispatch(TriviaChatSlice.actions.loadQuestions(props.category.id));
-  }
-  
   React.useEffect(() => {
-    if (!state.questions.data) {
-      dispatch(TriviaChatSlice.actions.loadQuestions(props.category.id));
+    if (!triviaChatX.questions.data) {
+      triviaChatX.loadQuestions(props.category.id)
     }
   }, [])
 
   return (
     <Conatiner>
       <QuizChat
-        onClickQuizStart={onClickQuizStart}
-        onClickNextQuestion={onClickNextQuestion}
-        onClickChoice={onClickChoice}
-        onClickRetry={onClickRetry}
+        onClickQuizStart={triviaChatX.startQuiz}
+        onClickNextQuestion={triviaChatX.retrieveQuestions}
+        onClickChoice={triviaChatX.submitAnswer}
+        onClickRetry={triviaChatX.retry}
         onClickQuit={onClickQuit}
-        onClickNextSet={onClickNextSet}
-        currentQuestion={state.currentQuestion}
-        interactive={state.interactive}
-        records={state.records}
-        score={state.score}
-        time={state.time}
-        interactiveVisible={state.interactiveVisible}
-        questions={state.questions.data}
-        resultVisible={state.resultVisible}
+        onClickNextSet={triviaChatX.nextSet.bind(null, category.id)}
+        currentQuestion={triviaChatX.currentQuestion}
+        interactive={triviaChatX.interactive}
+        records={triviaChatX.records}
+        score={triviaChatX.score}
+        time={triviaChatX.time}
+        interactiveVisible={triviaChatX.interactiveVisible}
+        questions={triviaChatX.questions.data}
+        resultVisible={triviaChatX.resultVisible}
       />
     </Conatiner>
   )
-}
+})
 
 const Conatiner = styled(AbsoluteFill)`
   display: flex;
@@ -91,6 +51,11 @@ const Conatiner = styled(AbsoluteFill)`
   align-items: center;
   background-color: rgba(255,255,255,0.5);
 `;
+
+type TriviaChatBaseProps = {
+  category: Omit<TriviaCategory, "id"> & { id?: number }
+  triviaChatX: TriviaChatX
+}
 
 type TriviaChatProps = {
   category: Omit<TriviaCategory, "id"> & { id?: number }

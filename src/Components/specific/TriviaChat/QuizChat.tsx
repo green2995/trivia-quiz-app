@@ -4,8 +4,8 @@ import { Trivia } from '../../../Interfaces/TriviaQuestion';
 import Chat from '../../derivative/Chat';
 import { ChatInteractiveProps } from '../../derivative/Chat/ChatInteractive';
 import { ChatRecordProps } from '../../derivative/Chat/ChatRecord/ChatRecord';
-import { TriviaChatState } from './slice';
 import TriviaChatTestIds from './testid';
+import TriviaChatX from './TriviaChatX';
 
 export const USER_NICK = "user";
 export const SYSTEM_NICK = "스템이";
@@ -46,7 +46,7 @@ const QuizChat = (props: QuizChatProps) => {
           type: "selection",
           value: {
             choices: props.currentQuestion.answers,
-            onSelect: props.onClickChoice,
+            onSelect: (answer) => props.onClickChoice(props.currentQuestion.index, answer),
             correct: props.questions![props.currentQuestion.index].correct_answer
           }
         },
@@ -96,15 +96,15 @@ type QuizChatProps = {
   interactive: "none" | "start" | "next" | "select"
   onClickQuizStart: () => void
   onClickNextQuestion: () => void
-  onClickChoice: (choice: string) => void
+  onClickChoice: (questionIndex: number, choice: string) => void
   onClickRetry: () => void
   onClickQuit: () => void
   onClickNextSet: () => void
   questions?: Trivia[]
-  score: TriviaChatState["score"]
-  time: TriviaChatState["time"]
+  score: TriviaChatX["score"]
+  time: TriviaChatX["time"]
   interactiveVisible?: boolean
-  currentQuestion: TriviaChatState["currentQuestion"]
+  currentQuestion: TriviaChatX["currentQuestion"]
   resultVisible?: boolean
   records: ChatRecordProps[]
 }

@@ -1,18 +1,16 @@
+import { observer } from 'mobx-react';
 import React from 'react'
-import { useDispatch, useSelector } from 'react-redux';
 import styled from 'styled-components';
-import { RootState } from '../store';
 import CategoryList from '../Components/specific/CategoryList';
 import TriviaSummary from '../Components/specific/TriviaSummary';
-import { categoriesSlice } from '../Store/trivia/categories/slice';
+import { useGlobal } from '../State/Global/Global';
 
-const Home = () => {
-  const dispatch = useDispatch();
-  const categories = useSelector((state: RootState) => state.trivia.categories);
+const Home = observer(() => {
+  const global = useGlobal();
 
   React.useEffect(() => {
-    if (!categories.data) {
-      dispatch(categoriesSlice.actions.loadCategories());
+    if (!global.categories.data) {
+      global.fetchCategories();
     }
   }, [])
 
@@ -20,13 +18,13 @@ const Home = () => {
     <Container>
       <ContentContainer>
         <TriviaSummary />
-        {categories.data !== undefined && (
-          <CategoryList items={categories.data} />
+        {global.categories.data !== undefined && (
+          <CategoryList items={global.categories.data} />
         )}
       </ContentContainer>
     </Container>
   )
-}
+})
 
 const Container = styled.main`
   &::before {

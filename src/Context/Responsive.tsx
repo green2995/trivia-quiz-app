@@ -36,7 +36,7 @@ function useResponsive() {
   } as const
 }
 
-export const [Context, useResponsiveContext] = constate(useResponsive);
+export const [Provider, useResponsiveContext] = constate(useResponsive);
 
 export function createResponsiveComponent<P>(Component: React.ComponentType<P>) {
   return (props: React.PropsWithChildren<ResponsiveProps<P>>) => {
